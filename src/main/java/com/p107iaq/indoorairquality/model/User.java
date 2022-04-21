@@ -1,10 +1,9 @@
 package com.p107iaq.indoorairquality.model;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 public class User {
@@ -14,8 +13,14 @@ public class User {
     private Long id;
     private String location;
     private String name;
+    @Email(message = "Username needs to be an email")
+    @NotBlank(message = "username is required")
+    @Column(unique = true)
+
     private String username;
+    @NotBlank(message = "Password field is required")
     private String password;
+    @Transient
     private String confirmPassword;
 
     public String getConfirmPassword() {
