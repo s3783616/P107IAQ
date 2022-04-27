@@ -14,6 +14,7 @@ public interface UserRepository extends CrudRepository<User,Long> {
     @Override
     Iterable<User> findAll();
     User findByUsername(String username);
+    @Query("select u from User u where u.id = ?1")
     User getById(Long id);
 
 
