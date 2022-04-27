@@ -12,7 +12,7 @@ public interface UserRepository extends CrudRepository<User,Long> {
     @Override
     Iterable<User> findAll();
 
-
+    @Query("select u from User u where u.username = ?1")
     User findByUsername(String username);
 
     @Query("select u from User u where u.id = ?1")

@@ -93,7 +93,17 @@ public class UserController {
         ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
         if(errorMap != null) return errorMap;
 
+        User user = userService.getUserByUsername(loginRequest.getUsername()) ;
+        if (user==null){
+            Map<String, String> results = new HashMap<>();
+            results.put("Message", "Could not find any users.");
+            return new ResponseEntity<>(results, HttpStatus.NOT_FOUND);
+        }else{
+            String jwt = TOKEN_PREFIX +  tokenProvider.generateToken(loginRequest.getUsername());
 
+            return ResponseEntity.ok(new JWTLoginSucessResponse(true, jwt));
+        }
+        /*
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.getUsername(),
@@ -104,6 +114,8 @@ public class UserController {
         String jwt = TOKEN_PREFIX +  tokenProvider.generateToken(authentication);
 
         return ResponseEntity.ok(new JWTLoginSucessResponse(true, jwt));
+         */
+
     }
 
 }
