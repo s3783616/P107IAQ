@@ -1,2 +1,2 @@
-INSERT INTO indoorairquality.user (id, location, name, password, username) VALUES (1, 'RMIT,Melbourne', 'Duc Tran', 'tranduc123', 'example1@student.rmit.edu.au');
-INSERT INTO indoorairquality.user (id, location, name, password, username) VALUES (2, 'RMIT,Melbourn', 'Jason Song', 'jasonsong123', 'example2@gmail.com');
+INSERT INTO indoorairquality.user ( location, name, password, username) VALUES ('RMIT,Melbourne', 'Duc Tran', 'tranduc123', 'example1@student.rmit.edu.au');
+INSERT INTO indoorairquality.user ( location, name, password, username) VALUES ( 'RMIT,Melbourn', 'Jason Song', 'jasonsong123', 'example2@gmail.com');

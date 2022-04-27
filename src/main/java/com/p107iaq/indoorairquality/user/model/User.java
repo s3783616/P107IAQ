@@ -1,4 +1,4 @@
-package com.p107iaq.indoorairquality.model;
+package com.p107iaq.indoorairquality.user.model;
 
 
 import javax.persistence.*;
@@ -16,7 +16,6 @@ public class User {
     @Email(message = "Username needs to be an email")
     @NotBlank(message = "username is required")
     @Column(unique = true)
-
     private String username;
     @NotBlank(message = "Password field is required")
     private String password;

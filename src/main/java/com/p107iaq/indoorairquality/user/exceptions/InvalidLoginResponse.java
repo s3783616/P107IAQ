@@ -1,4 +1,4 @@
-package com.p107iaq.indoorairquality.exceptions;
+package com.p107iaq.indoorairquality.user.exceptions;
 
 public class InvalidLoginResponse {
 

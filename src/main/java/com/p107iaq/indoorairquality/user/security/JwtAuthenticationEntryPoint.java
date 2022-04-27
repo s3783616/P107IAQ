@@ -1,6 +1,6 @@
-package com.p107iaq.indoorairquality.security;
+package com.p107iaq.indoorairquality.user.security;
 import com.google.gson.Gson;
-import com.p107iaq.indoorairquality.exceptions.InvalidLoginResponse;
+import com.p107iaq.indoorairquality.user.exceptions.InvalidLoginResponse;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -16,7 +16,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
                          AuthenticationException e) throws IOException, ServletException {
-
+        
         InvalidLoginResponse loginResponse = new InvalidLoginResponse();
         String jsonLoginResponse = new Gson().toJson(loginResponse);
 

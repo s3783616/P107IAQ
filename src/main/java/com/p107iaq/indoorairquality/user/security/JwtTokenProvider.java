@@ -1,6 +1,6 @@
-package com.p107iaq.indoorairquality.security;
+package com.p107iaq.indoorairquality.user.security;
 
-import com.p107iaq.indoorairquality.model.User;
+import com.p107iaq.indoorairquality.user.model.User;
 import io.jsonwebtoken.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;

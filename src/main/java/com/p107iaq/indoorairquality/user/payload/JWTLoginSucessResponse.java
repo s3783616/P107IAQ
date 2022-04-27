@@ -1,4 +1,4 @@
-package com.p107iaq.indoorairquality.payload;
+package com.p107iaq.indoorairquality.user.payload;
 
 public class JWTLoginSucessResponse {
     private boolean success;

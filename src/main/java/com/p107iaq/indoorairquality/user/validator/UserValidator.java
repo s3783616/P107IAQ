@@ -1,6 +1,6 @@
-package com.p107iaq.indoorairquality.validator;
+package com.p107iaq.indoorairquality.user.validator;
 
-import com.p107iaq.indoorairquality.model.User;
+import com.p107iaq.indoorairquality.user.model.User;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;

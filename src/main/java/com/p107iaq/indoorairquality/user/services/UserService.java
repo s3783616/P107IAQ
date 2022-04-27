@@ -1,16 +1,14 @@
-package com.p107iaq.indoorairquality.service;
+package com.p107iaq.indoorairquality.user.services;
 
-import com.p107iaq.indoorairquality.exceptions.UsernameAlreadyExistsException;
-import com.p107iaq.indoorairquality.model.User;
-import com.p107iaq.indoorairquality.repository.UserRepository;
+import com.p107iaq.indoorairquality.user.exceptions.UsernameAlreadyExistsException;
+import com.p107iaq.indoorairquality.user.model.User;
+import com.p107iaq.indoorairquality.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserServiceImpl {
+public class UserService {
 
     @Autowired
     private UserRepository userRepository;
@@ -25,7 +23,11 @@ public class UserServiceImpl {
 
     public User getUserById(long id) {
         User user = userRepository.getById(id);
-        return userRepository.getById(id);
+        return user;
+    }
+    public User getUserByUsername(String username) {
+        User user = userRepository.findByUsername(username);
+        return user;
     }
 
     public User saveUser (User newUser){

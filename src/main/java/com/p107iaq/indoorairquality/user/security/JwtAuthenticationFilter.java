@@ -1,7 +1,7 @@
-package com.p107iaq.indoorairquality.security;
+package com.p107iaq.indoorairquality.user.security;
 
-import com.p107iaq.indoorairquality.model.User;
-import com.p107iaq.indoorairquality.service.CustomUserDetailsService;
+import com.p107iaq.indoorairquality.user.model.User;
+import com.p107iaq.indoorairquality.user.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

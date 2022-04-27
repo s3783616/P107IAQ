@@ -1,12 +1,13 @@
-package com.p107iaq.indoorairquality.web;
+package com.p107iaq.indoorairquality.user.web;
 
-import com.p107iaq.indoorairquality.model.User;
-import com.p107iaq.indoorairquality.payload.JWTLoginSucessResponse;
-import com.p107iaq.indoorairquality.payload.LoginRequest;
-import com.p107iaq.indoorairquality.security.JwtTokenProvider;
-import com.p107iaq.indoorairquality.service.MapValidationErrorService;
-import com.p107iaq.indoorairquality.service.UserServiceImpl;
-import com.p107iaq.indoorairquality.validator.UserValidator;
+import com.p107iaq.indoorairquality.user.model.User;
+import com.p107iaq.indoorairquality.user.payload.JWTLoginSucessResponse;
+import com.p107iaq.indoorairquality.user.payload.LoginRequest;
+import com.p107iaq.indoorairquality.user.repository.UserRepository;
+import com.p107iaq.indoorairquality.user.security.JwtTokenProvider;
+import com.p107iaq.indoorairquality.user.services.MapValidationErrorService;
+import com.p107iaq.indoorairquality.user.services.UserService;
+import com.p107iaq.indoorairquality.user.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +23,7 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.p107iaq.indoorairquality.security.SecurityConstant.TOKEN_PREFIX;
+import static com.p107iaq.indoorairquality.user.security.SecurityConstant.TOKEN_PREFIX;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -31,7 +33,7 @@ public class UserController {
     private MapValidationErrorService mapValidationErrorService;
 
     @Autowired
-    private UserServiceImpl userService;
+    private UserService userService;
 
     @Autowired
     private UserValidator userValidator;
@@ -81,10 +83,16 @@ public class UserController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+
+
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest, BindingResult result){
         ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
         if(errorMap != null) return errorMap;
+
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -92,8 +100,6 @@ public class UserController {
                         loginRequest.getPassword()
                 )
         );
-        User user = (User) authentication.getPrincipal();
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = TOKEN_PREFIX +  tokenProvider.generateToken(authentication);
 

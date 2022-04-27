@@ -1,4 +1,4 @@
-package com.p107iaq.indoorairquality.security;
+package com.p107iaq.indoorairquality.user.security;
 
 public class SecurityConstant {
 

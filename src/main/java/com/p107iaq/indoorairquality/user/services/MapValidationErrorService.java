@@ -1,4 +1,4 @@
-package com.p107iaq.indoorairquality.service;
+package com.p107iaq.indoorairquality.user.services;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,7 +1,7 @@
-package com.p107iaq.indoorairquality.service;
+package com.p107iaq.indoorairquality.user.services;
 
-import com.p107iaq.indoorairquality.repository.UserRepository;
-import com.p107iaq.indoorairquality.model.User;
+import com.p107iaq.indoorairquality.user.repository.UserRepository;
+import com.p107iaq.indoorairquality.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
