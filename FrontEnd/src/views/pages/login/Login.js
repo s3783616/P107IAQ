@@ -15,10 +15,10 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
-
+import 'src/scss/_custom.scss'
 const Login = () => {
   return (
-    <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
+    <div className="hero min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={8}>
@@ -26,7 +26,7 @@ const Login = () => {
               <CCard className="p-4">
                 <CCardBody>
                   <CForm>
-                    <h1>Login</h1>
+                    <h2 className="text-dark">Login</h2>
                     <p className="text-medium-emphasis">Sign In to your account</p>
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
@@ -61,18 +61,18 @@ const Login = () => {
                   </CForm>
                 </CCardBody>
               </CCard>
-              <CCard className="text-white bg-dark py-5" style={{ width: '44%' }}>
+              <CCard className="bg-light text-black  py-5 opacity=0" style={{ width: '44%' }}>
                 <CCardBody className="text-center">
                   <div>
-                    <h2>Sign up</h2>
+                    <h2>Register</h2>
                     <br></br>
-                    <p>
+                    <p className="fst-italic" color="dark">
                       Airrater is an app that helps you monitor your envitonment, track your
                       symptoms and helps you manage your health. Does not have an account yet?
                     </p>
                     <Link to="/register">
-                      <CButton color="light" className="mt-3" active tabIndex={-1}>
-                        Register Now!
+                      <CButton color="dark" className="mt-3">
+                        Register Now
                       </CButton>
                     </Link>
                   </div>
