@@ -17,14 +17,25 @@ import { cilLockLocked, cilUser } from '@coreui/icons'
 
 const Register = () => {
   return (
-    <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
+    <div className="hero min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={9} lg={7} xl={6}>
             <CCard className="mx-4">
               <CCardBody className="p-4">
                 <CForm>
-                  <h1>Register</h1>
+                  <CRow>
+                    <CCol xs={10}>
+                      <h1 className="text-dark">Register</h1>
+                    </CCol>
+                    <CCol xs={2} className="text-right">
+                      <Link to="/login">
+                        <CButton color="dark" className="px-3">
+                          back
+                        </CButton>
+                      </Link>
+                    </CCol>
+                  </CRow>
                   <p className="text-medium-emphasis">Create your account</p>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
