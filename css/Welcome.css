@@ -208,19 +208,28 @@ button {
     height: 40px;
 }
 
-.dashList{
+.myimgdivshowhide{
 	display:none;
-    text-align:center;
-}  
-.dashList img{
-  margin: 0 auto;
 }
-.dashList span{
-	text-align: center;
-    background: #ffdede;
-    padding: 6px 10px;
-    display: block;
-    width: 100px;
-    border: 1px solid #d47c7c;
-    margin: 8px auto;
+img{
+    
+    max-height: 100%;
+}
+.graphLobby{
+    
+    max-width: 50%;
+    
+}
+.graphOffice{
+    
+    max-width: 50%;
+    
+}
+.graph{
+background: #fff;
+border-radius: 10px;
+box-shadow: 0 14px 28px rgba(0, 0, 0, .2), 0 10px 10px rgba(0, 0, 0, .2);
+position: relative;
+width: 768px;
+max-width: 100%;
 }

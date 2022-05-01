@@ -1,32 +1,41 @@
 <!DOCTYPE html>
 <link rel="stylesheet" href="css/Welcome.css" />
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>
-    $(document).ready(function(){
-        $('#selection').on('change', function(){
-            var demovalue = $(this).val(); 
-            $("div.dashList").hide();
-            $("#show"+demovalue).show();
-        });
-    });
-    </script>
+$(document).ready(function(){
+	$('.showbtn').click(function(){
+        $('.graphOffice').hide();
+        $('.graphLobby').show();
+          
 
-<div class="container" id="container">
-    <p>Sensor Data</p>
-    <p>Historical Data</p>
-    <p>Specify Parameters</p>
-    <select id="dlist" class="selection">
-        <option value="Images/lobby.jpeg">Lobby</option>
-        <option value="Images/office.png">Office</option>
-        <option value="Images/hallway.jpeg">Primary Hallway</option>
-        </select>
+	});
+  $('.showbtn2').click(function(){
+    $('.graphLobby').hide();	
+    $('.graphOffice').show();
+          
+
+	});
+  	$('.hidebtn').click(function(){
+   		$('.graphLobby').hide();
+        $('.graphOffice').hide();
+	});
+});
+</script>
+</head>
+<body>
+<button type="button" class="showbtn">Lobby Sensor</button>  
+<button type="button" class="showbtn2">Office Sensor</button>  
+<button type="button" class="hidebtn">Hide Image</button>
+<div class="graphLobby">
+	<img src="Images/lobby.jpeg" alt="display image on button click" width="460" height="200"/>
 </div>
-<div id="showOne" class="dashList">
-	<img src="Images/lobby.jpeg" alt="Lobby"/><span>Lobby</span>
-</div>
-<div id="showTwo" class="dashList">
-	<img src="/Images/office.png" alt="Office"/><span>Office</span>
-</div>
-<div id="showThree" class="dashList">
-	<img src="/images/null.jpg" alt="Hallway"/><span>Hallway</span>
+<div class="graphOffice">
+	<img src="Images/Office.png" alt="display image on button click" width="460" height="200"/>
 </div>
 
+
+<h2>Timeline</h2>
+<div class="graph"></div>
+
+</body>
