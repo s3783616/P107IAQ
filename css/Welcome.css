@@ -207,3 +207,20 @@ button {
     width: 300px;
     height: 40px;
 }
+
+.dashList{
+	display:none;
+    text-align:center;
+}  
+.dashList img{
+  margin: 0 auto;
+}
+.dashList span{
+	text-align: center;
+    background: #ffdede;
+    padding: 6px 10px;
+    display: block;
+    width: 100px;
+    border: 1px solid #d47c7c;
+    margin: 8px auto;
+}

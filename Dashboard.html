@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="css/Welcome.css" />
+<script>
+    $(document).ready(function(){
+        $('#selection').on('change', function(){
+            var demovalue = $(this).val(); 
+            $("div.dashList").hide();
+            $("#show"+demovalue).show();
+        });
+    });
+    </script>
+
+<div class="container" id="container">
+    <p>Sensor Data</p>
+    <p>Historical Data</p>
+    <p>Specify Parameters</p>
+    <select id="dlist" class="selection">
+        <option value="Images/lobby.jpeg">Lobby</option>
+        <option value="Images/office.png">Office</option>
+        <option value="Images/hallway.jpeg">Primary Hallway</option>
+        </select>
+</div>
+<div id="showOne" class="dashList">
+	<img src="Images/lobby.jpeg" alt="Lobby"/><span>Lobby</span>
+</div>
+<div id="showTwo" class="dashList">
+	<img src="/Images/office.png" alt="Office"/><span>Office</span>
+</div>
+<div id="showThree" class="dashList">
+	<img src="/images/null.jpg" alt="Hallway"/><span>Hallway</span>
+</div>
+
