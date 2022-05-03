@@ -1,17 +1,30 @@
-import { createStore } from 'redux'
+import { createStore, applyMiddleware, compose } from "redux";
+import thunk from "redux-thunk";
+import rootReducer from "./reducers";
 
-const initialState = {
-  sidebarShow: true,
+const initalState = {};
+const middleware = [thunk];
+
+let store;
+
+const ReactReduxDevTools =
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
+
+if (window.navigator.userAgent.includes("Chrome") && ReactReduxDevTools) {
+  store = createStore(
+    rootReducer,
+    initalState,
+    compose(
+      applyMiddleware(...middleware),
+      ReactReduxDevTools
+    )
+  );
+} else {
+  store = createStore(
+    rootReducer,
+    initalState,
+    compose(applyMiddleware(...middleware))
+  );
 }
 
-const changeState = (state = initialState, { type, ...rest }) => {
-  switch (type) {
-    case 'set':
-      return { ...state, ...rest }
-    default:
-      return state
-  }
-}
-
-const store = createStore(changeState)
-export default store
+export default store;
