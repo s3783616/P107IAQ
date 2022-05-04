@@ -6,6 +6,7 @@ import { login } from "../../actions/securityActions";
 import { Link } from "react-router-dom";
 import classnames from "classnames";
 import "../scss/custom.css";
+
 class Login extends Component {
   constructor() {
     super();

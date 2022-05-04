@@ -95,9 +95,16 @@ public class UserController {
             results.put("Message", "Could not find any users.");
             return new ResponseEntity<>(results, HttpStatus.NOT_FOUND);
         }else{
-            String jwt = TOKEN_PREFIX +  tokenProvider.generateToken(loginRequest.getUsername());
+            if(bCryptPasswordEncoder.matches(loginRequest.getPassword(), user.getPassword())){
+                String jwt = TOKEN_PREFIX +  tokenProvider.generateToken(loginRequest.getUsername());
+                return ResponseEntity.ok(new JWTLoginSucessResponse(true, jwt));
 
-            return ResponseEntity.ok(new JWTLoginSucessResponse(true, jwt));
+            }
+            else{
+                Map<String, String> results = new HashMap<>();
+                results.put("Message", "Could not find any users.");
+                return new ResponseEntity<>(results, HttpStatus.NOT_FOUND);
+            }
         }
         /*
         Authentication authentication = authenticationManager.authenticate(
