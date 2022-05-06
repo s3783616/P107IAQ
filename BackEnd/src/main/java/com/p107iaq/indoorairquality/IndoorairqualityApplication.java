@@ -18,13 +18,6 @@ public class IndoorairqualityApplication {
     public static void main(String[] args) throws IOException {
         SpringApplication.run(IndoorairqualityApplication.class, args);
 
-        OkHttpClient client = new OkHttpClient();
-        Request req = new Request.Builder()
-                .addHeader("Authorization","hZqzKsC0SRNY2sXioGnxFGk0srONpcsx")
-                .url("https://developer-apis.awair.is/v1/orgs/8646")
-                .build();
-        Response response = client.newCall(req).execute();
-        System.out.println(response.body().string());
 
     }
 

@@ -17,6 +17,4 @@ public interface UserRepository extends CrudRepository<User,Long> {
 
     @Query("select u from User u where u.id = ?1")
     User getById(Long id);
-
-
 }
