@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { Form } from "react-bootstrap";
 import { createNewUser } from "../../actions/securityActions";
 import { Link } from "react-router-dom";
+import Header from "../Layout/Header";
 import "../scss/custom.css";
 
 class Register extends Component {
@@ -41,6 +42,7 @@ class Register extends Component {
   render() {
     return (
       <div>
+        <Header />
         <div className="hero d-flex align-items-center auth py-5">
           <div className="row w-100 mx-0">
             <div className="col-lg-5 mx-auto">

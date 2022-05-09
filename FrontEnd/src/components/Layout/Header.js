@@ -84,7 +84,7 @@ class Header extends Component {
       >
         <div className={"row w-100 justify-content-start"}>
           <div className={"col"}>
-            <a className="navbar-brand ms-4" href="/">
+            <a className="navbar-brand ms-4" href="/dashboard">
               AirRater
             </a>
           </div>
