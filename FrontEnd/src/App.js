@@ -1,18 +1,15 @@
 import React, { Component } from "react";
 import "./App.css";
-import Header from "./components/Layout/Header";
-import Footer from "./components/Layout/Footer";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import { Provider } from "react-redux";
 import store from "./store";
 
-import Landing from "./components/Layout/Landing";
+import Dashboard from "./components/pages/Dashboard";
 import Register from "./components/UserManagement/Register";
 import Login from "./components/UserManagement/Login";
-import About from "./components/About";
-import Contact from "./components/Contact";
+import Survey from "./components/pages/Survey";
 import jwt_decode from "jwt-decode";
 import setJWTToken from "./securityUtils/setJWTToken";
 import { SET_CURRENT_USER } from "./actions/types";
@@ -40,16 +37,15 @@ class App extends Component {
       <Provider store={store}>
         <Router>
           <div className="App">
-            <Header />
             {
               //Public Routes
             }
 
-            <Route exact path="/" component={Landing} />
+            <Route exact path="/" component={Login} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />
-            <Route exact path="/about" component={About} />
-            <Route exact path="/contact" component={Contact} />
+            <Route exact path="/dashboard" component={Dashboard} />
+            <Route exact path="/survey" component={Survey} />
             {
               //Private Routes
             }

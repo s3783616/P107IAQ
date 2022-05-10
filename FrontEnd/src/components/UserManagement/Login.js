@@ -5,6 +5,7 @@ import { Form } from "react-bootstrap";
 import { login } from "../../actions/securityActions";
 import { Link } from "react-router-dom";
 import classnames from "classnames";
+import Header from "../Layout/Header";
 import "../scss/custom.css";
 
 class Login extends Component {
@@ -23,13 +24,13 @@ class Login extends Component {
   componentDidMount() {
     window.localStorage.removeItem("message");
     if (this.props.security.validToken) {
-      this.props.history.push("/");
+      this.props.history.push("/dashboard");
     }
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.security.validToken) {
-      this.props.history.push("/");
+      this.props.history.push("/dashboard");
     }
 
     if (nextProps.errors) {
@@ -61,6 +62,7 @@ class Login extends Component {
     const { errors } = this.state;
     return (
       <div>
+        <Header />
         <div className="hero d-flex align-items-center auth py-5">
           <div className="row w-100 mx-0">
             <div className="col-lg-5 mx-auto">
