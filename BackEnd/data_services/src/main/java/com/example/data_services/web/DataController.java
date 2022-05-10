@@ -1,4 +1,5 @@
 package com.example.data_services.web;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import okhttp3.Response;
@@ -82,11 +83,22 @@ public class DataController {
                                             @RequestParam(value = "dateTo", required = true) String dateTo){
         ArrayList<Response> responses = dataService.getRawData(deviceID,dateFrom,dateTo);
         String data= "";
+        String seperator = "\"data:\"";
         for (Response response:responses){
             try {
-                JSONObject jsonObject = new JSONObject(response.body().string());
-                System.out.println("JSON Object: "+jsonObject.getJSONObject("data"));
+                StringBuilder tmp = new StringBuilder(response.body().string());
+                tmp.deleteCharAt(0);
+                tmp.deleteCharAt(tmp.length()-1);
+                tmp.delete(1,9);
+                JSONArray jsonArrayBefore= new JSONArray(tmp.toString());
+                JSONArray jsonTmpAfter = new JSONArray();
 
+                for(int i=0; i<jsonArrayBefore.length();i++){
+                    if(i % 6 ==0) {
+                        jsonTmpAfter.put(jsonArrayBefore.getJSONObject(i));
+                    }
+                }
+                data = data + "{" + "\n" + seperator + jsonTmpAfter.toString(1) + "}";
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
