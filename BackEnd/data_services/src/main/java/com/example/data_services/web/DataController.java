@@ -26,46 +26,13 @@ public class DataController {
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
-    @GetMapping("/rawData")
-    public ResponseEntity<?>getRawData(@RequestParam(value = "deviceID", required = true) String deviceID,
-                                       @RequestParam(value = "dateFrom", required = true) String dateFrom,
-                                       @RequestParam(value = "dateTo", required = true) String dateTo){
-
-        ArrayList<Response> responses = dataService.getRawData(deviceID,dateFrom,dateTo);
-        String data = "";
-        for (Response response:responses){
-            try {
-                data = data+response.body().string();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return new ResponseEntity<>(data, HttpStatus.OK);
-    }
-
-    @GetMapping("/5minInterval")
-    public ResponseEntity<?>getData5minIntv(@RequestParam(value = "deviceID", required = true) String deviceID,
-                                       @RequestParam(value = "dateFrom", required = true) String dateFrom,
-                                       @RequestParam(value = "dateTo", required = true) String dateTo){
-
-        ArrayList<Response> responses = dataService.get5minutesAvgData(deviceID,dateFrom,dateTo);
-        String data = "";
-        for (Response response:responses){
-            try {
-                data = data+response.body().string();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return new ResponseEntity<>(data, HttpStatus.OK);
-    }
-
-    @GetMapping("/15minInterval")
-    public ResponseEntity<?>getData15minIntv(@RequestParam(value = "deviceID", required = true) String deviceID,
-                                            @RequestParam(value = "dateFrom", required = true) String dateFrom,
-                                            @RequestParam(value = "dateTo", required = true) String dateTo){
-
-        ArrayList<Response> responses = dataService.get15minutesAvgData(deviceID,dateFrom,dateTo);
+    @GetMapping("/getData")
+    public ResponseEntity<?>getData(@RequestParam(value = "deviceID", required = true) String deviceID,
+                                    @RequestParam(value = "dateFrom", required = true) String dateFrom,
+                                    @RequestParam(value = "dateTo", required = true) String dateTo,
+                                    @RequestParam(value = "dataType", required = true) String dataType){
+        ArrayList<Response> responses = dataService.getData(deviceID,dataType,dateFrom,dateTo);
+        if (responses == null) return new ResponseEntity<>("Invalid parameter",HttpStatus.BAD_REQUEST);
         String data = "";
         for (Response response:responses){
             try {
@@ -81,7 +48,7 @@ public class DataController {
     public ResponseEntity<?>getData1minIntv(@RequestParam(value = "deviceID", required = true) String deviceID,
                                             @RequestParam(value = "dateFrom", required = true) String dateFrom,
                                             @RequestParam(value = "dateTo", required = true) String dateTo){
-        ArrayList<Response> responses = dataService.getRawData(deviceID,dateFrom,dateTo);
+        ArrayList<Response> responses = dataService.getData(deviceID,"raw",dateFrom,dateTo);
         String data= "";
         String seperator = "\"data:\"";
         for (Response response:responses){
