@@ -55,21 +55,21 @@ public class DataController {
             @RequestParam(value = "dateTo", required = true) String dateTo) {
         ArrayList<Response> responses = dataService.getData(deviceID, "raw", dateFrom, dateTo);
         String data = "";
-        String seperator = "\"data:\"";
 
         int interval = 6;
-        JSONArray result_array = new JSONArray();
+
         for (Response response : responses) {
             try {
-                JSONArray sensors_array= new JSONArray();
+
+                JSONArray result_array = new JSONArray();
                 StringBuilder tmp = new StringBuilder(response.body().string());
                 tmp.deleteCharAt(0);
                 tmp.deleteCharAt(tmp.length() - 1);
                 tmp.delete(1, 9);
+
                 JSONArray jsonArray= new JSONArray(tmp.toString());
-
-
                 Map<String, Double> map = new HashMap<>();
+
                 map.put("temp", 0.0);
                 map.put("humid", 0.0);
                 map.put("voc", 0.0);
@@ -97,9 +97,10 @@ public class DataController {
 
                     if((i+1)%interval==0){
                         JSONArray result = new JSONArray();
+                        JSONArray sensors_array= new JSONArray();
                         avg_score = avg_score/interval;
+
                         for(String key : map.keySet()){
-                            System.out.println("key: " + key + " value: " + map.get(key)/interval);
                             JSONObject pair = new JSONObject();
                             pair.put("comp:",key);
                             pair.put("value:",map.get(key)/interval);
@@ -109,9 +110,11 @@ public class DataController {
                         JSONObject timestamp = new JSONObject();
                         JSONObject score = new JSONObject();
                         JSONObject sensor_array_warp = new JSONObject();
+
                         timestamp.put("timestamp",jsonArray.getJSONObject(i+1-interval).get("timestamp"));
                         score.put("score",avg_score);
                         sensor_array_warp.put("sensors",sensors_array);
+
                         result.put(timestamp);
                         result.put(score);
                         result.put(sensor_array_warp);
@@ -119,17 +122,13 @@ public class DataController {
                         avg_score = 0.0;
                     }
                 }
-
+                data = data + result_array.toString(1);
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
 
         }
-        try {
-            data = data + result_array.toString(1);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 }
