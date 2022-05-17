@@ -7,21 +7,7 @@ import Search from "../Layout/Search";
 import "../scss/Dashboard.css";
 import Sidebar from "../Layout/Sidebar";
 import Header from "../Layout/Header";
-import Chart from 'chart.js/auto'; //Importing graphing function
 
-const chart = new Chart(ctx, {
-  type: 'line',
-  data: data, //This should be gathered from the JSON at some point
-  options: {
-    onClick: (e) => {
-      const canvasPosition = getRelativePosition(e, chart);
-
-      // Substitute the appropriate scale IDs
-      const dataX = chart.scales.x.getValueForPixel(canvasPosition.x);
-      const dataY = chart.scales.y.getValueForPixel(canvasPosition.y);
-    }
-  }
-});
 class Dashboard extends Component {
   state = {
     refresh: false,
