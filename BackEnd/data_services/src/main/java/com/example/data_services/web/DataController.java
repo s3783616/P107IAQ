@@ -57,11 +57,12 @@ public class DataController {
         String data = "";
 
         int interval = 6;
+        JSONArray result_array = new JSONArray();
 
         for (Response response : responses) {
             try {
 
-                JSONArray result_array = new JSONArray();
+
                 StringBuilder tmp = new StringBuilder(response.body().string());
                 tmp.deleteCharAt(0);
                 tmp.deleteCharAt(tmp.length() - 1);
@@ -122,13 +123,17 @@ public class DataController {
                         avg_score = 0.0;
                     }
                 }
-                data = data + result_array.toString(1);
+
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
 
         }
-
+        try {
+            data = data + result_array.toString(1);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 }
