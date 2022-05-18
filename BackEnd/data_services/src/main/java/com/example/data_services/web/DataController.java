@@ -48,7 +48,7 @@ public class DataController {
                 tmp.deleteCharAt(tmp.length() - 1);
                 tmp.delete(1, 9);
 
-                JSONArray jsonArray= new JSONArray(tmp.toString());
+                JSONArray jsonArray = new JSONArray(tmp.toString());
 
                 result_array.put(jsonArray);
 
@@ -79,13 +79,12 @@ public class DataController {
         for (Response response : responses) {
             try {
 
-
                 StringBuilder tmp = new StringBuilder(response.body().string());
                 tmp.deleteCharAt(0);
                 tmp.deleteCharAt(tmp.length() - 1);
                 tmp.delete(1, 9);
 
-                JSONArray jsonArray= new JSONArray(tmp.toString());
+                JSONArray jsonArray = new JSONArray(tmp.toString());
                 Map<String, Double> map = new HashMap<>();
 
                 map.put("temp", 0.0);
@@ -100,28 +99,44 @@ public class DataController {
                 for (int i = 0; i < jsonArray.length(); i++) {
 
                     avg_score = avg_score + Double.parseDouble(jsonArray.getJSONObject(i).get("score").toString());
-                    //map.put("score", map.get("score") + Double.parseDouble(jsonArray.getJSONObject(i).get("score").toString()));
+
                     JSONArray holder = jsonArray.getJSONObject(i).getJSONArray("sensors");
-                    for(int j = 0;j<holder.length();j++){
-                        if(holder.getJSONObject(j).get("comp").toString().equals("temp")) map.put("temp", map.get("temp") + Double.parseDouble(holder.getJSONObject(j).get("value").toString()));//avg_temp = avg_temp + Double.parseDouble(holder.getJSONObject(j).get("value").toString());
-                        else if(holder.getJSONObject(j).get("comp").toString().equals("humid")) map.put("humid", map.get("humid") + Double.parseDouble(holder.getJSONObject(j).get("value").toString()));//avg_humid= avg_humid + Double.parseDouble(holder.getJSONObject(j).get("value").toString());
-                        else if(holder.getJSONObject(j).get("comp").toString().equals("voc")) map.put("voc", map.get("voc") + Double.parseDouble(holder.getJSONObject(j).get("value").toString()));//avg_voc= avg_voc + Double.parseDouble(holder.getJSONObject(j).get("value").toString());
-                        else if(holder.getJSONObject(j).get("comp").toString().equals("pm25")) map.put("pm25", map.get("pm25") + Double.parseDouble(holder.getJSONObject(j).get("value").toString()));//avg_pm25= avg_pm25 + Double.parseDouble(holder.getJSONObject(j).get("value").toString());
-                        else if(holder.getJSONObject(j).get("comp").toString().equals("pm10_est")) map.put("pm10_est", map.get("pm10_est") + Double.parseDouble(holder.getJSONObject(j).get("value").toString()));//avg_pm10Est= avg_pm10Est + Double.parseDouble(holder.getJSONObject(j).get("value").toString());
-                        else if(holder.getJSONObject(j).get("comp").toString().equals("co2")) map.put("co2", map.get("co2") + Double.parseDouble(holder.getJSONObject(j).get("value").toString()));//avg_co2= avg_co2 + Double.parseDouble(holder.getJSONObject(j).get("value").toString());
-                        else if(holder.getJSONObject(j).get("comp").toString().equals("lux")) map.put("lux", map.get("lux") + Double.parseDouble(holder.getJSONObject(j).get("value").toString()));//avg_lux= avg_lux + Double.parseDouble(holder.getJSONObject(j).get("value").toString());
-                        else if(holder.getJSONObject(j).get("comp").toString().equals("spl_a")) map.put("spl_a", map.get("spl_a") + Double.parseDouble(holder.getJSONObject(j).get("value").toString()));//avg_splA= avg_splA + Double.parseDouble(holder.getJSONObject(j).get("value").toString());
-                    }
+                    for (int j = 0; j < holder.length(); j++) {
+                        if (holder.getJSONObject(j).get("comp").toString().equals("temp"))
+                            map.put("temp", map.get("temp")
+                                    + Double.parseDouble(holder.getJSONObject(j).get("value").toString()));
+                        else if (holder.getJSONObject(j).get("comp").toString().equals("humid"))
+                            map.put("humid", map.get("humid")
+                                    + Double.parseDouble(holder.getJSONObject(j).get("value").toString()));
 
-                    if((i+1)%interval==0){
+                        else if (holder.getJSONObject(j).get("comp").toString().equals("voc"))
+                            map.put("voc", map.get("voc")
+                                    + Double.parseDouble(holder.getJSONObject(j).get("value").toString()));
+                        else if (holder.getJSONObject(j).get("comp").toString().equals("pm25"))
+                            map.put("pm25", map.get("pm25")
+                                    + Double.parseDouble(holder.getJSONObject(j).get("value").toString()));
+                        else if (holder.getJSONObject(j).get("comp").toString().equals("pm10_est"))
+                            map.put("pm10_est", map.get("pm10_est")
+                                    + Double.parseDouble(holder.getJSONObject(j).get("value").toString()));
+                        else if (holder.getJSONObject(j).get("comp").toString().equals("co2"))
+                            map.put("co2", map.get("co2")
+                                    + Double.parseDouble(holder.getJSONObject(j).get("value").toString()));
+                        else if (holder.getJSONObject(j).get("comp").toString().equals("lux"))
+                            map.put("lux", map.get("lux")
+                                    + Double.parseDouble(holder.getJSONObject(j).get("value").toString()));
+                        else if (holder.getJSONObject(j).get("comp").toString().equals("spl_a"))
+                            map.put("spl_a", map.get("spl_a")
+                                    + Double.parseDouble(holder.getJSONObject(j).get("value").toString()));}
+
+                    if ((i + 1) % interval == 0) {
                         JSONArray result = new JSONArray();
-                        JSONArray sensors_array= new JSONArray();
-                        avg_score = avg_score/interval;
+                        JSONArray sensors_array = new JSONArray();
+                        avg_score = avg_score / interval;
 
-                        for(String key : map.keySet()){
+                        for (String key : map.keySet()) {
                             JSONObject pair = new JSONObject();
-                            pair.put("comp:",key);
-                            pair.put("value:",map.get(key)/interval);
+                            pair.put("comp:", key);
+                            pair.put("value:", map.get(key) / interval);
                             sensors_array.put(pair);
                             map.put(key, 0.0);
                         }
@@ -129,9 +144,9 @@ public class DataController {
                         JSONObject score = new JSONObject();
                         JSONObject sensor_array_warp = new JSONObject();
 
-                        timestamp.put("timestamp",jsonArray.getJSONObject(i+1-interval).get("timestamp"));
-                        score.put("score",avg_score);
-                        sensor_array_warp.put("sensors",sensors_array);
+                        timestamp.put("timestamp", jsonArray.getJSONObject(i + 1 - interval).get("timestamp"));
+                        score.put("score", avg_score);
+                        sensor_array_warp.put("sensors", sensors_array);
 
                         result.put(timestamp);
                         result.put(score);
