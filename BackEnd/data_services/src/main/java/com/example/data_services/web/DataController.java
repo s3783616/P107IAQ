@@ -39,13 +39,30 @@ public class DataController {
         if (responses == null)
             return new ResponseEntity<>("Invalid parameter", HttpStatus.BAD_REQUEST);
         String data = "";
+        JSONArray result_array = new JSONArray();
         for (Response response : responses) {
             try {
-                data = data + response.body().string();
-            } catch (IOException e) {
+
+                StringBuilder tmp = new StringBuilder(response.body().string());
+                tmp.deleteCharAt(0);
+                tmp.deleteCharAt(tmp.length() - 1);
+                tmp.delete(1, 9);
+
+                JSONArray jsonArray= new JSONArray(tmp.toString());
+
+                result_array.put(jsonArray);
+
+            } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
         }
+
+        try {
+            data = data + result_array.toString(1);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
