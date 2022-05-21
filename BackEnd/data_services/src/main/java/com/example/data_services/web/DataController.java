@@ -52,12 +52,17 @@ public class DataController {
 
                 result_array.put(jsonArray);
 
+                // data = data + response.body().string();
+
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
         }
 
         try {
+            JSONObject deviceMetaData = new JSONObject();
+            deviceMetaData.put("device_id:", deviceID);
+            result_array.put(deviceMetaData);
             data = data + result_array.toString(1);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -126,7 +131,8 @@ public class DataController {
                                     + Double.parseDouble(holder.getJSONObject(j).get("value").toString()));
                         else if (holder.getJSONObject(j).get("comp").toString().equals("spl_a"))
                             map.put("spl_a", map.get("spl_a")
-                                    + Double.parseDouble(holder.getJSONObject(j).get("value").toString()));}
+                                    + Double.parseDouble(holder.getJSONObject(j).get("value").toString()));
+                    }
 
                     if ((i + 1) % interval == 0) {
                         JSONArray result = new JSONArray();
