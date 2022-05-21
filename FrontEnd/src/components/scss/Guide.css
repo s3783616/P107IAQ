@@ -1,0 +1,11 @@
+.dashboard .row-bad {
+  background-color: #ee6868;
+}
+
+.dashboard .row-fair {
+  background-color: #e9da52;
+}
+
+.dashboard .row-good {
+  background-color: #6efc8c;
+}

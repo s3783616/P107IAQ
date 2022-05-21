@@ -1,9 +1,10 @@
-import React, { Component } from "react";
-import { Alert } from "react-bootstrap";
+import React, { Component, useState } from "react";
+import { Alert, Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { connect } from "react-redux";
 import { getSearchedData } from "../../actions/dataActions";
 import { Link } from "react-router-dom";
 import Search from "../Layout/Search";
+import Select from "./Select";
 import "../scss/Dashboard.css";
 import Sidebar from "../Layout/Sidebar";
 import Header from "../Layout/Header";
@@ -11,18 +12,19 @@ import Header from "../Layout/Header";
 class Dashboard extends Component {
   state = {
     refresh: false,
-    device: "",
+    device: " ",
   };
 
   constructor(props) {
     super(props);
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
+
     this.setState({ refresh: false });
   }
 
-  onSearchSubmit(deviceID, dateFrom, dateTo, dataType) {
-    this.props.getSearchedData(deviceID);
-    this.setState({ device: deviceID });
+  onSearchSubmit(deviceid) {
+    this.props.getSearchedData(deviceid);
+    this.setState({ device: deviceid });
   }
 
   searchDeviceError() {
@@ -30,7 +32,7 @@ class Dashboard extends Component {
     if (
       this.state.device === "26203" ||
       this.state.device === "25758" ||
-      this.state.device === ""
+      this.state.device === " "
     ) {
       return null;
     } else {
@@ -43,11 +45,23 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    this.props.getSearchedData(0);
+    const orders = this.props.sensordata.data;
+    if (orders === undefined) {
+      this.props.getSearchedData(this.state.device);
+    } else {
+      this.props.getSearchedData(26203);
+    }
+    this.interval = setInterval(
+      () => this.props.getSearchedData(this.state.device),
+      60000
+    );
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   renderLocationAndDate() {
-    console.log(this.state.device === "26203");
     if (this.state.device === "26203") {
       return (
         <div className="awair2 mb-4">
@@ -368,7 +382,7 @@ class Dashboard extends Component {
                 &#8226;
               </span>
             );
-          } else if (sensor.value < 20 || sensor.value > 50) {
+          } else if (sensor.value < 40 || sensor.value > 50) {
             return (
               <span
                 className="d-flex"
@@ -610,6 +624,319 @@ class Dashboard extends Component {
     }
   }
 
+  renderIAQNote() {
+    const orders = this.props.sensordata.data;
+
+    if (orders.message === undefined) {
+      if (orders.data[0].score < 40) {
+        return (
+          <Alert key="primary" variant="danger">
+            <strong>Danger:</strong> The air quality in the room is bad. Please
+            check the sensor data and take consecutive measures. Leave the room
+            immediately.
+          </Alert>
+        );
+      } else if (orders.data[0].score < 70) {
+        return (
+          <Alert key="primary" variant="warning">
+            <strong>Warning:</strong> The air quality in the room is fair.
+            Please check the sensor data and take consecutive measures. Leave
+            the room immediately if you are not feeling well.
+          </Alert>
+        );
+      } else {
+        return (
+          <Alert key="primary" variant="success">
+            <strong>Success:</strong> The air quality in the room is good.
+            Please check the sensor data and take consecutive measures if the
+            score is not normal.
+          </Alert>
+        );
+      }
+    } else {
+      return (
+        <Alert key="primary" variant="info">
+          <strong>Info:</strong> Please search your device to see the IAQ score.
+        </Alert>
+      );
+    }
+  }
+
+  renderTempNote() {
+    const orders = this.props.sensordata.data;
+    console.log(orders.message);
+    if (orders.message === undefined) {
+      return orders.data[0].sensors.map((sensor) => {
+        if (sensor.comp === "temp") {
+          if (sensor.value < 11 || sensor.value > 32) {
+            if (sensor.value < 11) {
+              return (
+                <Alert key="primary" variant="danger">
+                  <strong>Danger:</strong> The temperature in the room is very
+                  low. Please take any measures below and evacuate immediately.
+                  <ul>
+                    <li>Open the windows and the doors</li>
+                    <li>
+                      Turn on the air conditioner and set the temperature to
+                      25(&#8451;)
+                    </li>
+                  </ul>
+                </Alert>
+              );
+            } else {
+              return (
+                <Alert key="primary" variant="danger">
+                  <strong>Danger:</strong> The temperature in the room is very
+                  high. Please take any measures below and evacuate immediately.
+                  <ul>
+                    <li>Open the windows and the doors</li>
+                    <li>
+                      Turn on the air conditioner and set the temperature to
+                      18(&#8451;)
+                    </li>
+                  </ul>
+                </Alert>
+              );
+            }
+          } else if (sensor.value < 18 || sensor.value > 26) {
+            if (sensor.value < 18) {
+              return (
+                <Alert key="primary" variant="warning">
+                  <strong>Warning:</strong> The temperature in the room is low.
+                  Please take any measures below and evacuate immediately if you
+                  are not feeling well.
+                  <ul>
+                    <li>Open the windows and the doors</li>
+                    <li>
+                      Turn on the air conditioner and set the temperature to
+                      25(&#8451;)
+                    </li>
+                  </ul>
+                </Alert>
+              );
+            } else {
+              return (
+                <Alert key="primary" variant="warning">
+                  <strong>Warning:</strong> The temperature in the room is high.
+                  Please take any measures below and evacuate immediately if you
+                  are not feeling well.
+                  <ul>
+                    <li>Open the windows and the doors</li>
+                    <li>
+                      Turn on the air conditioner and set the temperature to
+                      18(&#8451;)
+                    </li>
+                  </ul>
+                </Alert>
+              );
+            }
+          } else {
+            return null;
+          }
+        }
+      });
+    } else {
+      return null;
+    }
+  }
+
+  renderHumidNote() {
+    const orders = this.props.sensordata.data;
+    console.log(orders.message);
+    if (orders.message === undefined) {
+      return orders.data[0].sensors.map((sensor) => {
+        if (sensor.comp === "humid") {
+          if (sensor.value < 20 || sensor.value > 65) {
+            if (sensor.value < 20) {
+              return (
+                <Alert key="primary" variant="danger">
+                  <strong>Danger:</strong> The humidity in the room is very low.
+                  Please take any measures below and evacuate immediately.
+                  <ul>
+                    <li>Turn on humidifiers</li>
+                    <li>
+                      Turn on the air conditioner and set the temperature to
+                      25(&#8451;)
+                    </li>
+                  </ul>
+                </Alert>
+              );
+            } else {
+              return (
+                <Alert key="primary" variant="danger">
+                  <strong>Danger:</strong> The humidity in the room is very
+                  high. Please take any measures below and evacuate immediately.
+                  <ul>
+                    <li>Turn on dehumidifier or ventilation fans</li>
+                    <li>
+                      Turn on the air conditioner and set the temperature to
+                      18(&#8451;)
+                    </li>
+                  </ul>
+                </Alert>
+              );
+            }
+          } else if (sensor.value < 40 || sensor.value > 50) {
+            if (sensor.value < 40) {
+              return (
+                <Alert key="primary" variant="warning">
+                  <strong>Warning:</strong> The humidity in the room is low.
+                  Please take any measures below and evacuate immediately if you
+                  are not feeling well.
+                  <ul>
+                    <li>Turn on humidifiers</li>
+                    <li>
+                      Turn on the air conditioner and set the temperature to
+                      25(&#8451;)
+                    </li>
+                  </ul>
+                </Alert>
+              );
+            } else {
+              return (
+                <Alert key="primary" variant="warning">
+                  <strong>Warning:</strong> The humidity in the room is high.
+                  Please take any measures below and evacuate immediately if you
+                  are not feeling well.
+                  <ul>
+                    <li>Turn on dehumidifier or ventilation fans</li>
+                    <li>
+                      Turn on the air conditioner and set the temperature to
+                      18(&#8451;)
+                    </li>
+                  </ul>
+                </Alert>
+              );
+            }
+          } else {
+            return null;
+          }
+        }
+      });
+    } else {
+      return null;
+    }
+  }
+
+  renderCO2Note() {
+    const orders = this.props.sensordata.data;
+    console.log(orders.message);
+    if (orders.message === undefined) {
+      return orders.data[0].sensors.map((sensor) => {
+        if (sensor.comp === "co2") {
+          if (sensor.value > 1500) {
+            return (
+              <Alert key="primary" variant="danger">
+                <strong>Danger:</strong> The CO<sub>2</sub> concentration in the
+                room is very high. Please take any measures below and evacuate
+                immediately.
+                <ul>
+                  <li>Open any windows and doors</li>
+                  <li>Turn on any ventilation device</li>
+                </ul>
+              </Alert>
+            );
+          } else if (sensor.value > 600) {
+            return (
+              <Alert key="primary" variant="warning">
+                <strong>Warning:</strong> The CO<sub>2</sub> concentration in
+                the room is high. Please take any measures below and evacuate
+                immediately if you are not feeling well.
+                <ul>
+                  <li>Open any windows and doors</li>
+                  <li>Turn on any ventilation device</li>
+                </ul>
+              </Alert>
+            );
+          } else {
+            return null;
+          }
+        }
+      });
+    } else {
+      return null;
+    }
+  }
+
+  renderVOCNote() {
+    const orders = this.props.sensordata.data;
+    console.log(orders.message);
+    if (orders.message === undefined) {
+      return orders.data[0].sensors.map((sensor) => {
+        if (sensor.comp === "voc") {
+          if (sensor.value > 3333) {
+            return (
+              <Alert key="primary" variant="danger">
+                <strong>Danger:</strong> The VOC<sub>s</sub> concentration in
+                the room is very high. Please take any measures below and
+                evacuate immediately.
+                <ul>
+                  <li>Open any windows and doors</li>
+                  <li>Turn on any ventilation device</li>
+                </ul>
+              </Alert>
+            );
+          } else if (sensor.value > 333) {
+            return (
+              <Alert key="primary" variant="warning">
+                <strong>Warning:</strong> The VOC<sub>s</sub> concentration in
+                the room is high. Please take any measures below and evacuate
+                immediately if you are not feeling well.
+                <ul>
+                  <li>Open any windows and doors</li>
+                  <li>Turn on any ventilation device</li>
+                </ul>
+              </Alert>
+            );
+          } else {
+            return null;
+          }
+        }
+      });
+    } else {
+      return null;
+    }
+  }
+
+  renderPM25Note() {
+    const orders = this.props.sensordata.data;
+    console.log(orders.message);
+    if (orders.message === undefined) {
+      return orders.data[0].sensors.map((sensor) => {
+        if (sensor.comp === "pm25") {
+          if (sensor.value > 55) {
+            return (
+              <Alert key="primary" variant="danger">
+                <strong>Danger:</strong> The PM2.5 level in the room is very
+                high. Please take any measures below and evacuate immediately.
+                <ul>
+                  <li>Open any windows and doors</li>
+                  <li>Turn on any ventilation device</li>
+                </ul>
+              </Alert>
+            );
+          } else if (sensor.value > 15) {
+            return (
+              <Alert key="primary" variant="warning">
+                <strong>Warning:</strong> The PM2.5 level in the room is high.
+                Please take any measures below and evacuate immediately if you
+                are not feeling well.
+                <ul>
+                  <li>Open any windows and doors</li>
+                  <li>Turn on any ventilation device</li>
+                </ul>
+              </Alert>
+            );
+          } else {
+            return null;
+          }
+        }
+      });
+    } else {
+      return null;
+    }
+  }
+
   render() {
     return (
       <div className="dashboard d-flex">
@@ -627,7 +954,7 @@ class Dashboard extends Component {
         >
           <Header />
           <div style={{ height: "100%" }}>
-            <div style={{ height: "calc(100% - 64px)", overflowY: "scroll" }}>
+            <div style={{ height: "calc(100% - 50px)", overflowY: "scroll" }}>
               <div className="d-flex">
                 <div className="mr-auto ml-5 mt-4">
                   <h3>Dashboard</h3>
@@ -637,7 +964,7 @@ class Dashboard extends Component {
               <div className="d-flex card-section">
                 <div className="cards-container">
                   <div className="card-bg w-100 border d-flex flex-column">
-                    <Search onSearchSubmit={this.onSearchSubmit} />
+                    <Select onSearchSubmit={this.onSearchSubmit} />
                   </div>
                 </div>
               </div>
@@ -719,52 +1046,24 @@ class Dashboard extends Component {
                     <div className="p-4 d-flex flex-column h-100">
                       <div className="d-flex align-items-center justify-content-between">
                         <div className="notes">
-                          <Alert key="primary" variant="danger">
-                            <strong>Danger:</strong> The CO<sub>2</sub>{" "}
-                            concentration in the room is at a critical level
-                            <ul>
-                              <li>
-                                Air the rooms: it is recommended to open the
-                                windows and the doors regularly to reduce the
-                                effects of confinement.
-                              </li>
-                              <li>
-                                Have a good ventilation: an efficient
-                                ventilation system is recommended to ensure a
-                                good air renewal.
-                              </li>
-                              <li>
-                                Controlling pollution sources: there are many
-                                sources of pollution and it is important to
-                                limit them. It is essential to choose the
-                                furniture carefully, to use “healthy” cleaning
-                                products or to isolate the photocopiers etc.
-                              </li>
-                            </ul>
-                          </Alert>
-                          <Alert key="primary" variant="warning">
-                            <strong>Warning:</strong> The PM2.5 concentration in
-                            the room is at a critical level
-                            <ul>
-                              <li>
-                                Air the rooms: it is recommended to open the
-                                windows and the doors regularly to reduce the
-                                effects of confinement.
-                              </li>
-                              <li>
-                                Have a good ventilation: an efficient
-                                ventilation system is recommended to ensure a
-                                good air renewal.
-                              </li>
-                              <li>
-                                Controlling pollution sources: there are many
-                                sources of pollution and it is important to
-                                limit them. It is essential to choose the
-                                furniture carefully, to use “healthy” cleaning
-                                products or to isolate the photocopiers etc.
-                              </li>
-                            </ul>
-                          </Alert>
+                          {this.props.sensordata.data
+                            ? this.renderIAQNote()
+                            : ""}
+                          {this.props.sensordata.data
+                            ? this.renderTempNote()
+                            : ""}
+                          {this.props.sensordata.data
+                            ? this.renderHumidNote()
+                            : ""}
+                          {this.props.sensordata.data
+                            ? this.renderCO2Note()
+                            : ""}
+                          {this.props.sensordata.data
+                            ? this.renderVOCNote()
+                            : ""}
+                          {this.props.sensordata.data
+                            ? this.renderPM25Note()
+                            : ""}
                         </div>
                       </div>
                     </div>

@@ -10,13 +10,13 @@ import Dashboard from "./components/pages/Dashboard";
 import Register from "./components/UserManagement/Register";
 import Login from "./components/UserManagement/Login";
 import Survey from "./components/pages/Survey";
+import Guide from "./components/pages/Guide";
+import Analytics from "./components/pages/Analytics";
 import jwt_decode from "jwt-decode";
 import setJWTToken from "./securityUtils/setJWTToken";
 import { SET_CURRENT_USER } from "./actions/types";
 import { logout } from "./actions/securityActions";
-import OrderList from "./components/OrderManagement/OrderList";
-import OrderDetail from "./components/OrderManagement/OrderDetail";
-import Search2 from "./components/OrderManagement/DataList2";
+
 const jwtToken = localStorage.jwtToken;
 
 if (jwtToken) {
@@ -47,11 +47,8 @@ class App extends Component {
             <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/dashboard" component={Dashboard} />
-            <Route exact path="/survey" component={Survey} />
-            <Route exact path="/orders" component={OrderList} />
-            <Route exact path="/orders/:orderId" component={OrderDetail} />
-
-            <Route exact path="/search2" component={Search2} />
+            <Route exact path="/guide" component={Guide} />
+            <Route exact path="/analytics" component={Analytics} />
             {
               //Private Routes
             }

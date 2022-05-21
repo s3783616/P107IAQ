@@ -7,3 +7,4 @@ export const GET_ORDER = "GET_ORDER";
 export const CANCEL_ORDER = "CANCEL_ORDER";
 
 export const GET_SEARCHED_DATA = "GET_SEARCHED_DATA";
+export const GET_15MIN_AVG_DATA = "GET_15MIN_AVG_DATA";

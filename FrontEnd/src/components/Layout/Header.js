@@ -3,6 +3,7 @@ import { withRouter } from "react-router-dom";
 import { logout } from "../../actions/securityActions";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import Logo from "../../img/logo.png";
 
 class Header extends Component {
   constructor(props) {
@@ -68,24 +69,18 @@ class Header extends Component {
             Log Out
           </a>
         </li>
-        <li className="nav-item">
-          <a href="/" className="nav-link">
-            Profile
-          </a>
-        </li>
       </ul>
     );
 
     return (
       <div
-        className={
-          "container-fluid navbar navbar-expand-lg navbar-dark bg-dark"
-        }
+        className={"container-fluid navbar navbar-expand-lg navbar-dark"}
+        style={{ backgroundColor: "black" }}
       >
         <div className={"row w-100 justify-content-start"}>
           <div className={"col"}>
             <a className="navbar-brand ms-4" href="/dashboard">
-              AirRater
+              <img src={Logo} style={{ width: "100px" }} />
             </a>
           </div>
 
