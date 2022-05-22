@@ -168,6 +168,9 @@ public class DataController {
 
         }
         try {
+            JSONObject deviceMetaData = new JSONObject();
+            deviceMetaData.put("device_id:", deviceID);
+            result_array.put(deviceMetaData);
             data = data + result_array.toString(1);
         } catch (JSONException e) {
             e.printStackTrace();
