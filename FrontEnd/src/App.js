@@ -11,7 +11,7 @@ import Register from "./components/UserManagement/Register";
 import Login from "./components/UserManagement/Login";
 import Survey from "./components/pages/Survey";
 import Guide from "./components/pages/Guide";
-import Analytics from "./components/pages/Analytics";
+import Analytics from "./components/pages/AnalyticsTest";
 import jwt_decode from "jwt-decode";
 import setJWTToken from "./securityUtils/setJWTToken";
 import { SET_CURRENT_USER } from "./actions/types";

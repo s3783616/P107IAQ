@@ -5,7 +5,7 @@ import { Alert, Form, FormControl, Button } from "react-bootstrap";
 
 class Select extends Component {
   state = {
-    deviceid: null,
+    deviceid: " ",
   };
 
   handleChange = (e) => {
@@ -25,7 +25,7 @@ class Select extends Component {
           <span className="mb-2">Choose Device ID</span>
           <Form className="d-flex">
             <select
-              deviceID={this.state.deviceid}
+              deviceid={this.state.deviceid}
               onChange={this.handleChange}
               style={{ height: "40px", width: "1120px" }}
             >

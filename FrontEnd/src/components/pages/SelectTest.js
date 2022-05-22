@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { get15MinAvgData } from "../../actions/dataActions";
+import { getSearchedData } from "../../actions/dataActions";
 import { Alert, Form, FormControl, Button } from "react-bootstrap";
 
 class SelectTest extends Component {
@@ -51,4 +51,4 @@ class SelectTest extends Component {
 const mapStateToProps = (state) => {
   return { datas: state.datas };
 };
-export default connect(mapStateToProps, { get15MinAvgData })(SelectTest);
+export default connect(mapStateToProps, { getSearchedData })(SelectTest);

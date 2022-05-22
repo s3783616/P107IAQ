@@ -47,7 +47,6 @@ class Dashboard extends Component {
   componentDidMount() {
     const orders = this.props.sensordata.data;
     const orders2 = this.props.sensordata.graphdata;
-
     if (orders === undefined) {
       if (orders2 === undefined) {
         this.props.getSearchedData(this.state.device);
