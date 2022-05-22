@@ -1,9 +1,5 @@
 import axios from "axios";
-import {
-  GET_SEARCHED_DATA,
-  GET_15MIN_AVG_DATA,
-  GET_1MIN_AVG_DATA,
-} from "./types";
+import { GET_SEARCHED_DATA, GET_AVG_DATA, GET_1MIN_AVG_DATA } from "./types";
 
 export const getSearchedData =
   (deviceID = "") =>
@@ -11,6 +7,13 @@ export const getSearchedData =
     try {
       let dateNow = new Date();
       let dateNext = new Date(dateNow.getTime() + 10 * 60000);
+      console.log(
+        dateNow.toISOString().substr(0, dateNow.toISOString().length - 7) + "00"
+      );
+      console.log(
+        dateNext.toISOString().substr(0, dateNow.toISOString().length - 7) +
+          "00"
+      );
       const res = await axios.get(`http://localhost:8081/api/data/getData`, {
         params: {
           deviceID,
@@ -32,27 +35,21 @@ export const getSearchedData =
     } catch (error) {}
   };
 
-export const get15MinAvgData =
-  (deviceID = "", dataType = "") =>
+export const getAvgData =
+  (deviceID = "", dateFrom = "", dateTo = "", dataType = "") =>
   async (dispatch) => {
     try {
       const res = await axios.get(`http://localhost:8081/api/data/getData`, {
         params: {
           deviceID,
-          dateFrom:
-            new Date(new Date().getTime() - 720 * 60000)
-              .toISOString()
-              .substr(0, new Date().toISOString().length - 7) + "00",
-          dateTo:
-            new Date()
-              .toISOString()
-              .substr(0, new Date().toISOString().length - 7) + "00",
+          dateFrom,
+          dateTo,
           dataType,
         },
       });
 
       dispatch({
-        type: GET_15MIN_AVG_DATA,
+        type: GET_AVG_DATA,
         payload: res.data,
       });
     } catch (error) {}
@@ -68,7 +65,7 @@ export const get1MinAvgData =
           params: {
             deviceID,
             dateFrom:
-              new Date(new Date().getTime() - 720 * 60000)
+              new Date(new Date().getTime() - 10 * 60000)
                 .toISOString()
                 .substr(0, new Date().toISOString().length - 7) + "00",
             dateTo:

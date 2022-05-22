@@ -1,5 +1,5 @@
 import {
-  GET_15MIN_AVG_DATA,
+  GET_AVG_DATA,
   GET_SEARCHED_DATA,
   GET_1MIN_AVG_DATA,
 } from "../actions/types";
@@ -10,7 +10,7 @@ export default function (state = [], action) {
       return {
         data: action.payload,
       };
-    case GET_15MIN_AVG_DATA:
+    case GET_AVG_DATA:
       return {
         graphdata: action.payload,
       };

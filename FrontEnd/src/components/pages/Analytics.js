@@ -1,44 +1,44 @@
-import React, { Component, useState } from "react";
-import { Alert, Button, OverlayTrigger, Tooltip } from "react-bootstrap";
+import React, { Component } from "react";
+import { Alert, Button, ButtonGroup } from "react-bootstrap";
 import { connect } from "react-redux";
-import { getSearchedData, get15MinAvgData } from "../../actions/dataActions";
-import { Link } from "react-router-dom";
-import Search from "../Layout/Search";
-import Select2 from "./SelectTest";
+import {
+  getSearchedData,
+  getAvgData,
+  get1MinAvgData,
+} from "../../actions/dataActions";
+
 import "../scss/Dashboard.css";
 import Sidebar from "../Layout/Sidebar";
 import Header from "../Layout/Header";
 import Chart from "react-apexcharts";
 
 class Analytics extends Component {
-  state = {
-    refresh: false,
-    device: " ",
-  };
-
   constructor(props) {
     super(props);
     this.updateCharts = this.updateCharts.bind(this);
-    this.setState({ refresh: false });
+    this.handleChange1Min = this.handleChange1Min.bind(this);
+    this.handleChange5Min = this.handleChange5Min.bind(this);
+    this.handleChangeRaw = this.handleChangeRaw.bind(this);
+    this.handleChange15Min = this.handleChange15Min.bind(this);
     this.state = {
+      deviceid: " ",
+      dateFrom:
+        new Date(new Date().getTime() - 720 * 60000)
+          .toISOString()
+          .substr(0, new Date().toISOString().length - 7) + "00",
+      dateTo:
+        new Date()
+          .toISOString()
+          .substr(0, new Date().toISOString().length - 7) + "00",
+      dataType: "15-min-avg",
       series: [
         {
           name: "Awair Score",
-          data: [
-            [new Date("2018-02-12").getTime(), 34],
-            [new Date("2018-02-14").getTime(), 76],
-            [new Date("2018-02-16").getTime(), 55],
-            [new Date("2018-02-17").getTime(), 88],
-          ],
+          data: [],
         },
         {
-          name: "Awair asd",
-          data: [
-            [new Date("2018-02-12").getTime(), 34],
-            [new Date("2018-02-14").getTime(), 76],
-            [new Date("2018-02-16").getTime(), 55],
-            [new Date("2018-02-17").getTime(), 88],
-          ],
+          name: "Temp",
+          data: [],
         },
       ],
       options: {
@@ -72,7 +72,7 @@ class Analytics extends Component {
         tooltip: {
           y: {
             formatter: function (val) {
-              return val.toFixed(1);
+              return val.toFixed(10);
             },
           },
           x: {
@@ -85,7 +85,7 @@ class Analytics extends Component {
           tickAmount: 3,
           labels: {
             formatter: function (val) {
-              return val.toFixed(1);
+              return val.toFixed(10);
             },
           },
           title: {
@@ -102,36 +102,85 @@ class Analytics extends Component {
     };
   }
 
-  renderanything() {
+  componentDidMount() {
     const orders = this.props.sensordata.data;
-
-    if (orders.length > 1) {
-      const deviceid = orders[1].device_id;
-      console.log(deviceid);
-      this.props.get15MinAvgData(deviceid);
+    if (orders !== undefined) {
+      if (orders.length > 1) {
+        const deviceid = orders[orders.length - 1].device_id;
+        this.props.getAvgData(
+          deviceid,
+          this.state.dateFrom,
+          this.state.dateTo,
+          this.state.dataType
+        );
+        this.setState({ deviceid: deviceid });
+      }
     }
   }
 
-  renderanything2() {
+  handleChangeRaw() {
     const orders = this.props.sensordata.graphdata;
-    const graph = [];
-    orders[0].map((order) => {
-      let data = [];
-      for (var i = 0; i < 2; i++) {
-        if (i === 0) {
-          data.push(order.score);
-        } else {
-          data.push(order.timestamp);
-        }
+    console.log(orders);
+    if (orders !== undefined) {
+      if (orders.length > 1) {
+        this.props.getAvgData(
+          this.state.deviceid,
+          this.state.dateFrom,
+          this.state.dateTo,
+          "raw"
+        );
+        this.setState({ dataType: "raw" });
       }
-      graph.push(data);
-    });
-    console.table(graph);
+    }
+  }
+
+  handleChange1Min() {
+    const orders = this.props.sensordata.graphdata;
+    console.log(orders);
+    if (orders !== undefined) {
+      if (orders.length > 1) {
+        this.props.get1MinAvgData(this.state.deviceid);
+        this.setState({ dataType: "1-min-avg" });
+      }
+    }
+  }
+
+  handleChange5Min() {
+    const orders = this.props.sensordata.graphdata;
+    console.log(orders);
+    if (orders !== undefined) {
+      if (orders.length > 1) {
+        this.props.getAvgData(
+          this.state.deviceid,
+          this.state.dateFrom,
+          this.state.dateTo,
+          "5-min-avg"
+        );
+        this.setState({ dataType: "5-min-avg" });
+      }
+    }
+  }
+
+  handleChange15Min() {
+    const orders = this.props.sensordata.graphdata;
+    console.log(orders);
+    if (orders !== undefined) {
+      if (orders.length > 1) {
+        this.props.getAvgData(
+          this.state.deviceid,
+          this.state.dateFrom,
+          this.state.dateTo,
+          "15-min-avg"
+        );
+        this.setState({ dataType: "15-min-avg" });
+      }
+    }
   }
 
   updateCharts() {
     const newMixedSeries = [];
     const orders = this.props.sensordata.graphdata;
+    console.log(this.state.dataType);
     const graph = [];
     orders[0].map((order) => {
       let data = [];
@@ -151,23 +200,6 @@ class Analytics extends Component {
     this.setState({
       series: newMixedSeries,
       options: { title: { text: "Device " + orders[1].device_id } },
-    });
-  }
-
-  updateCharts2() {
-    const max = 90;
-    const min = 30;
-    const newMixedSeries = [];
-
-    this.state.series.forEach((s) => {
-      const data2 = s.data.map(() => {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-      });
-      newMixedSeries.push({ data: data2, type: "line" });
-    });
-
-    this.setState({
-      series: newMixedSeries,
     });
   }
 
@@ -198,16 +230,26 @@ class Analytics extends Component {
               <div className="d-flex card-section">
                 <div className="cards-container">
                   <div className="card-bg w-100 border d-flex flex-column">
-                    {this.props.sensordata.data ? this.renderanything() : ""}
-                    {this.props.sensordata.graphdata
-                      ? this.renderanything2()
-                      : ""}
+                    <ButtonGroup aria-label="Basic example">
+                      <Button variant="secondary">1-min avg</Button>
+                      <Button
+                        onClick={this.handleChange5Min}
+                        variant="secondary"
+                      >
+                        5-min avg
+                      </Button>
+                      <Button
+                        onClick={this.handleChange15Min}
+                        variant="secondary"
+                      >
+                        15-min avg
+                      </Button>
+                    </ButtonGroup>
                     <Chart
                       options={this.state.options}
                       series={this.state.series}
                       type="line"
                       height={450}
-                      width={1250}
                     ></Chart>
                     <button onClick={this.updateCharts}>Update!</button>
                   </div>
@@ -225,5 +267,6 @@ const mapStateToProps = (state) => {
 };
 export default connect(mapStateToProps, {
   getSearchedData,
-  get15MinAvgData,
+  getAvgData,
+  get1MinAvgData,
 })(Analytics);

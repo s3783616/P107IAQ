@@ -5,25 +5,15 @@ import {
   OverlayTrigger,
   Tooltip,
   ButtonGroup,
-  Form,
 } from "react-bootstrap";
 import { connect } from "react-redux";
 import { getSearchedData, get15MinAvgData } from "../../actions/dataActions";
 import { Link } from "react-router-dom";
-import Search from "../Layout/Search";
-import Select2 from "./SelectTest";
 import "../scss/Dashboard.css";
 import Sidebar from "../Layout/Sidebar";
 import Header from "../Layout/Header";
 import Chart from "react-apexcharts";
-//import DateTimePicker from "react-datetime-picker"
-import DateFnsUtils from "@date-io/date-fns"; // choose your lib
-import {
-  DatePicker,
-  TimePicker,
-  DateTimePicker,
-  MuiPickersUtilsProvider,
-} from "@material-ui/pickers";
+
 class AnalyticsTest extends Component {
   state = {
     refresh: false,
@@ -227,16 +217,6 @@ class AnalyticsTest extends Component {
                     {this.props.sensordata.graphdata
                       ? this.renderanything2()
                       : ""}
-                    <div className="d-flex">
-                      <Form.Control type="date" name="date_of_birth" />
-                      <Form.Control type="time" name="date_of_birth" />
-
-                      <Form.Control type="date" name="date_of_birth" />
-                      <Form.Control type="time" name="date_of_birth" />
-                    </div>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                      <DateTimePicker />
-                    </MuiPickersUtilsProvider>
                   </div>
                 </div>
               </div>

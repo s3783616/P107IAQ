@@ -47,20 +47,20 @@ class Dashboard extends Component {
   componentDidMount() {
     const orders = this.props.sensordata.data;
     const orders2 = this.props.sensordata.graphdata;
-
+    console.log(orders2);
     if (orders === undefined) {
       if (orders2 === undefined) {
         this.props.getSearchedData(this.state.device);
       } else {
-        this.props.getSearchedData(orders2[1].device_id);
-        this.setState({ device: orders2[1].device_id });
+        this.props.getSearchedData(orders2[orders2.length - 1].device_id);
+        this.setState({ device: orders2[orders2.length - 1].device_id });
       }
     } else {
       if (orders.length == 1) {
         this.props.getSearchedData(orders[0].device_id);
       } else {
-        this.props.getSearchedData(orders[1].device_id);
-        this.setState({ device: orders[1].device_id });
+        this.props.getSearchedData(orders[orders.length - 1].device_id);
+        this.setState({ device: orders[orders.length - 1].device_id });
       }
     }
     this.interval = setInterval(
@@ -121,6 +121,7 @@ class Dashboard extends Component {
   renderIAQScore() {
     const orders = this.props.sensordata.data;
 
+    console.log(orders);
     if (orders.length > 1) {
       if (orders[0].length > 0) {
         const length = orders[0].length;
