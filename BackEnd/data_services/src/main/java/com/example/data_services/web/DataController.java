@@ -135,7 +135,7 @@ public class DataController {
                     }
 
                     if ((i + 1) % interval == 0) {
-                        JSONArray result = new JSONArray();
+                        JSONObject result = new JSONObject();
                         JSONArray sensors_array = new JSONArray();
                         avg_score = avg_score / interval;
 
@@ -146,17 +146,9 @@ public class DataController {
                             sensors_array.put(pair);
                             map.put(key, 0.0);
                         }
-                        JSONObject timestamp = new JSONObject();
-                        JSONObject score = new JSONObject();
-                        JSONObject sensor_array_warp = new JSONObject();
-
-                        timestamp.put("timestamp", jsonArray.getJSONObject(i + 1 - interval).get("timestamp"));
-                        score.put("score", avg_score);
-                        sensor_array_warp.put("sensors", sensors_array);
-
-                        result.put(timestamp);
-                        result.put(score);
-                        result.put(sensor_array_warp);
+                        result.put("timestamp", jsonArray.getJSONObject(i + 1 - interval).get("timestamp"));
+                        result.put("score", avg_score);
+                        result.put("sensors", sensors_array);
                         result_array.put(result);
                         avg_score = 0.0;
                     }
