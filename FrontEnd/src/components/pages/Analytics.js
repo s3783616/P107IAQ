@@ -18,12 +18,11 @@ class Analytics extends Component {
     this.updateCharts = this.updateCharts.bind(this);
     this.handleChange1Min = this.handleChange1Min.bind(this);
     this.handleChange5Min = this.handleChange5Min.bind(this);
-    this.handleChangeRaw = this.handleChangeRaw.bind(this);
     this.handleChange15Min = this.handleChange15Min.bind(this);
     this.state = {
       deviceid: " ",
       dateFrom:
-        new Date(new Date().getTime() - 720 * 60000)
+        new Date(new Date().getTime() - 120 * 60000)
           .toISOString()
           .substr(0, new Date().toISOString().length - 7) + "00",
       dateTo:
@@ -38,6 +37,22 @@ class Analytics extends Component {
         },
         {
           name: "Temp",
+          data: [],
+        },
+        {
+          name: "Humid",
+          data: [],
+        },
+        {
+          name: "CO2",
+          data: [],
+        },
+        {
+          name: "VOCs",
+          data: [],
+        },
+        {
+          name: "PM2.5",
           data: [],
         },
       ],
@@ -72,7 +87,7 @@ class Analytics extends Component {
         tooltip: {
           y: {
             formatter: function (val) {
-              return val.toFixed(10);
+              return val.toFixed(2);
             },
           },
           x: {
@@ -85,7 +100,7 @@ class Analytics extends Component {
           tickAmount: 3,
           labels: {
             formatter: function (val) {
-              return val.toFixed(10);
+              return val.toFixed(2);
             },
           },
           title: {
@@ -104,9 +119,11 @@ class Analytics extends Component {
 
   componentDidMount() {
     const orders = this.props.sensordata.data;
+
     if (orders !== undefined) {
       if (orders.length > 1) {
         const deviceid = orders[orders.length - 1].device_id;
+        console.log(deviceid);
         this.props.getAvgData(
           deviceid,
           this.state.dateFrom,
@@ -118,28 +135,148 @@ class Analytics extends Component {
     }
   }
 
-  handleChangeRaw() {
+  handleChange = (e) => {
+    e.preventDefault();
     const orders = this.props.sensordata.graphdata;
-    console.log(orders);
+
     if (orders !== undefined) {
       if (orders.length > 1) {
+        if (this.state.dataType === "1-min-avg") {
+          this.pickDateRange1MinAvg(e.target.value);
+        } else {
+          this.pickDateRangeNot1MinAvg(e.target.value);
+        }
+      }
+    }
+  };
+
+  pickDateRange1MinAvg(datetime) {
+    let date = null;
+    switch (datetime) {
+      case "2":
+        date =
+          new Date(new Date().getTime() - 120 * 60000)
+            .toISOString()
+            .substr(0, new Date().toISOString().length - 7) + "00";
+
+        this.props.get1MinAvgData(this.state.deviceid, date, this.state.dateTo);
+        this.setState({
+          dateFrom: date,
+        });
+        break;
+      case "12":
+        date =
+          new Date(new Date().getTime() - 720 * 60000)
+            .toISOString()
+            .substr(0, new Date().toISOString().length - 7) + "00";
+
+        this.props.get1MinAvgData(this.state.deviceid, date, this.state.dateTo);
+        this.setState({
+          dateFrom: date,
+        });
+        break;
+      case "24":
+        date =
+          new Date(new Date().getTime() - 1440 * 60000)
+            .toISOString()
+            .substr(0, new Date().toISOString().length - 7) + "00";
+
+        this.props.get1MinAvgData(this.state.deviceid, date, this.state.dateTo);
+        this.setState({
+          dateFrom: date,
+        });
+        break;
+      default:
+        date =
+          new Date(new Date().getTime() - 120 * 60000)
+            .toISOString()
+            .substr(0, new Date().toISOString().length - 7) + "00";
+
+        this.props.get1MinAvgData(this.state.deviceid, date, this.state.dateTo);
+        this.setState({
+          dateFrom: date,
+        });
+    }
+  }
+
+  pickDateRangeNot1MinAvg(datetime) {
+    let date = null;
+    switch (datetime) {
+      case "2":
+        date =
+          new Date(new Date().getTime() - 120 * 60000)
+            .toISOString()
+            .substr(0, new Date().toISOString().length - 7) + "00";
+
         this.props.getAvgData(
           this.state.deviceid,
-          this.state.dateFrom,
+          date,
           this.state.dateTo,
-          "raw"
+          this.state.dataType
         );
-        this.setState({ dataType: "raw" });
-      }
+        this.setState({
+          dateFrom: date,
+        });
+        break;
+      case "12":
+        date =
+          new Date(new Date().getTime() - 720 * 60000)
+            .toISOString()
+            .substr(0, new Date().toISOString().length - 7) + "00";
+
+        this.props.getAvgData(
+          this.state.deviceid,
+          date,
+          this.state.dateTo,
+          this.state.dataType
+        );
+        this.setState({
+          dateFrom: date,
+        });
+        break;
+      case "24":
+        date =
+          new Date(new Date().getTime() - 1440 * 60000)
+            .toISOString()
+            .substr(0, new Date().toISOString().length - 7) + "00";
+
+        this.props.getAvgData(
+          this.state.deviceid,
+          date,
+          this.state.dateTo,
+          this.state.dataType
+        );
+        this.setState({
+          dateFrom: date,
+        });
+        break;
+      default:
+        date =
+          new Date(new Date().getTime() - 120 * 60000)
+            .toISOString()
+            .substr(0, new Date().toISOString().length - 7) + "00";
+
+        this.props.getAvgData(
+          this.state.deviceid,
+          date,
+          this.state.dateTo,
+          this.state.dataType
+        );
+        this.setState({
+          dateFrom: date,
+        });
     }
   }
 
   handleChange1Min() {
     const orders = this.props.sensordata.graphdata;
-    console.log(orders);
     if (orders !== undefined) {
       if (orders.length > 1) {
-        this.props.get1MinAvgData(this.state.deviceid);
+        this.props.get1MinAvgData(
+          this.state.deviceid,
+          this.state.dateFrom,
+          this.state.dateTo
+        );
         this.setState({ dataType: "1-min-avg" });
       }
     }
@@ -163,7 +300,7 @@ class Analytics extends Component {
 
   handleChange15Min() {
     const orders = this.props.sensordata.graphdata;
-    console.log(orders);
+    console.log(this.state.dateFrom);
     if (orders !== undefined) {
       if (orders.length > 1) {
         this.props.getAvgData(
@@ -177,10 +314,22 @@ class Analytics extends Component {
     }
   }
 
-  updateCharts() {
-    const newMixedSeries = [];
+  updateChartsScore1MinAvg() {
     const orders = this.props.sensordata.graphdata;
-    console.log(this.state.dataType);
+    const graph = [];
+    let length = orders.length;
+    for (var i = 0; i < length - 2; i++) {
+      let data = [];
+      let date = new Date(orders[i].timestamp);
+      data.push(date.getTime() + 600 * 60000);
+      data.push(orders[i].score);
+      graph.push(data);
+    }
+    return graph;
+  }
+
+  updateChartsScoreNot1MinAvg() {
+    const orders = this.props.sensordata.graphdata;
     const graph = [];
     orders[0].map((order) => {
       let data = [];
@@ -194,13 +343,323 @@ class Analytics extends Component {
       }
       graph.push(data);
     });
+    return graph;
+  }
 
-    newMixedSeries.push({ data: graph });
+  updateChartsTemp1MinAvg() {
+    const orders = this.props.sensordata.graphdata;
+    const graph = [];
+    let length = orders.length;
+    for (var i = 0; i < length - 2; i++) {
+      let data = [];
 
-    this.setState({
-      series: newMixedSeries,
-      options: { title: { text: "Device " + orders[1].device_id } },
+      let date = new Date(orders[i].timestamp);
+      data.push(date.getTime() + 600 * 60000);
+      orders[i].sensors.map((sensor) => {
+        if (sensor.comp === "temp") {
+          console.log(sensor.value);
+          data.push(sensor.value);
+        } else {
+          return null;
+        }
+      });
+
+      graph.push(data);
+    }
+
+    return graph;
+  }
+
+  updateChartsTempNot1MinAvg() {
+    const orders = this.props.sensordata.graphdata;
+    const graph = [];
+    orders[0].map((order) => {
+      let data = [];
+      for (var i = 0; i < 2; i++) {
+        if (i === 0) {
+          let date = new Date(order.timestamp);
+          data.push(date.getTime() + 600 * 60000);
+        } else {
+          order.sensors.map((sensor) => {
+            if (sensor.comp === "temp") {
+              data.push(sensor.value);
+            } else {
+              return null;
+            }
+          });
+        }
+      }
+      graph.push(data);
     });
+    return graph;
+  }
+
+  updateChartsHumid1MinAvg() {
+    const orders = this.props.sensordata.graphdata;
+    const graph = [];
+    let length = orders.length;
+    for (var i = 0; i < length - 2; i++) {
+      let data = [];
+
+      let date = new Date(orders[i].timestamp);
+      data.push(date.getTime() + 600 * 60000);
+      orders[i].sensors.map((sensor) => {
+        if (sensor.comp === "humid") {
+          console.log(sensor.value);
+          data.push(sensor.value);
+        } else {
+          return null;
+        }
+      });
+
+      graph.push(data);
+    }
+
+    return graph;
+  }
+
+  updateChartsHumidNot1MinAvg() {
+    const orders = this.props.sensordata.graphdata;
+    const graph = [];
+    orders[0].map((order) => {
+      let data = [];
+      for (var i = 0; i < 2; i++) {
+        if (i === 0) {
+          let date = new Date(order.timestamp);
+          data.push(date.getTime() + 600 * 60000);
+        } else {
+          order.sensors.map((sensor) => {
+            if (sensor.comp === "humid") {
+              data.push(sensor.value);
+            } else {
+              return null;
+            }
+          });
+        }
+      }
+      graph.push(data);
+    });
+    return graph;
+  }
+
+  updateChartsCO21MinAvg() {
+    const orders = this.props.sensordata.graphdata;
+    const graph = [];
+    let length = orders.length;
+    for (var i = 0; i < length - 2; i++) {
+      let data = [];
+
+      let date = new Date(orders[i].timestamp);
+      data.push(date.getTime() + 600 * 60000);
+      orders[i].sensors.map((sensor) => {
+        if (sensor.comp === "co2") {
+          console.log(sensor.value);
+          data.push(sensor.value);
+        } else {
+          return null;
+        }
+      });
+
+      graph.push(data);
+    }
+
+    return graph;
+  }
+
+  updateChartsCO2Not1MinAvg() {
+    const orders = this.props.sensordata.graphdata;
+    const graph = [];
+    orders[0].map((order) => {
+      let data = [];
+      for (var i = 0; i < 2; i++) {
+        if (i === 0) {
+          let date = new Date(order.timestamp);
+          data.push(date.getTime() + 600 * 60000);
+        } else {
+          order.sensors.map((sensor) => {
+            if (sensor.comp === "co2") {
+              data.push(sensor.value);
+            } else {
+              return null;
+            }
+          });
+        }
+      }
+      graph.push(data);
+    });
+    return graph;
+  }
+
+  updateChartsVOC1MinAvg() {
+    const orders = this.props.sensordata.graphdata;
+    const graph = [];
+    let length = orders.length;
+    for (var i = 0; i < length - 2; i++) {
+      let data = [];
+
+      let date = new Date(orders[i].timestamp);
+      data.push(date.getTime() + 600 * 60000);
+      orders[i].sensors.map((sensor) => {
+        if (sensor.comp === "voc") {
+          console.log(sensor.value);
+          data.push(sensor.value);
+        } else {
+          return null;
+        }
+      });
+
+      graph.push(data);
+    }
+
+    return graph;
+  }
+
+  updateChartsVOCNot1MinAvg() {
+    const orders = this.props.sensordata.graphdata;
+    const graph = [];
+    orders[0].map((order) => {
+      let data = [];
+      for (var i = 0; i < 2; i++) {
+        if (i === 0) {
+          let date = new Date(order.timestamp);
+          data.push(date.getTime() + 600 * 60000);
+        } else {
+          order.sensors.map((sensor) => {
+            if (sensor.comp === "voc") {
+              data.push(sensor.value);
+            } else {
+              return null;
+            }
+          });
+        }
+      }
+      graph.push(data);
+    });
+    return graph;
+  }
+
+  updateChartsPM251MinAvg() {
+    const orders = this.props.sensordata.graphdata;
+    const graph = [];
+    let length = orders.length;
+    for (var i = 0; i < length - 2; i++) {
+      let data = [];
+
+      let date = new Date(orders[i].timestamp);
+      data.push(date.getTime() + 600 * 60000);
+      orders[i].sensors.map((sensor) => {
+        if (sensor.comp === "pm25") {
+          console.log(sensor.value);
+          data.push(sensor.value);
+        } else {
+          return null;
+        }
+      });
+
+      graph.push(data);
+    }
+
+    return graph;
+  }
+
+  updateChartsPM25Not1MinAvg() {
+    const orders = this.props.sensordata.graphdata;
+    const graph = [];
+    orders[0].map((order) => {
+      let data = [];
+      for (var i = 0; i < 2; i++) {
+        if (i === 0) {
+          let date = new Date(order.timestamp);
+          data.push(date.getTime() + 600 * 60000);
+        } else {
+          order.sensors.map((sensor) => {
+            if (sensor.comp === "pm25") {
+              data.push(sensor.value);
+            } else {
+              return null;
+            }
+          });
+        }
+      }
+      graph.push(data);
+    });
+    return graph;
+  }
+
+  updateCharts() {
+    const newMixedSeries = [];
+    const orders = this.props.sensordata.graphdata;
+    const graph = [];
+    if (orders !== undefined) {
+      if (this.state.dataType !== "1-min-avg") {
+        //
+        let graph = this.updateChartsScoreNot1MinAvg();
+        let graph2 = this.updateChartsTempNot1MinAvg();
+        let graph3 = this.updateChartsHumidNot1MinAvg();
+        let graph4 = this.updateChartsCO2Not1MinAvg();
+        let graph5 = this.updateChartsVOCNot1MinAvg();
+        let graph6 = this.updateChartsPM25Not1MinAvg();
+        newMixedSeries.push({ data: graph });
+        newMixedSeries.push({ data: graph2 });
+        newMixedSeries.push({ data: graph3 });
+        newMixedSeries.push({ data: graph4 });
+        newMixedSeries.push({ data: graph5 });
+        newMixedSeries.push({ data: graph6 });
+        this.setState({
+          series: newMixedSeries,
+          options: {
+            title: {
+              text:
+                "Device " +
+                orders[1].device_id +
+                " ( " +
+                this.state.dataType +
+                " AWAIR score past " +
+                Math.ceil(
+                  (new Date(this.state.dateTo) -
+                    new Date(this.state.dateFrom)) /
+                    3600000
+                ) +
+                " hours )",
+            },
+          },
+        });
+      } else {
+        //
+        let length = orders.length;
+        let graph = this.updateChartsScore1MinAvg();
+        let graph2 = this.updateChartsTemp1MinAvg();
+        let graph3 = this.updateChartsHumid1MinAvg();
+        let graph4 = this.updateChartsCO21MinAvg();
+        let graph5 = this.updateChartsVOC1MinAvg();
+        let graph6 = this.updateChartsPM251MinAvg();
+        newMixedSeries.push({ data: graph });
+        newMixedSeries.push({ data: graph2 });
+        newMixedSeries.push({ data: graph3 });
+        newMixedSeries.push({ data: graph4 });
+        newMixedSeries.push({ data: graph5 });
+        newMixedSeries.push({ data: graph6 });
+        this.setState({
+          series: newMixedSeries,
+          options: {
+            title: {
+              text:
+                "Device " +
+                orders[length - 1].device_id +
+                " ( " +
+                this.state.dataType +
+                " AWAIR score past " +
+                Math.ceil(
+                  (new Date(this.state.dateTo) -
+                    new Date(this.state.dateFrom)) /
+                    3600000
+                ) +
+                " hours )",
+            },
+          },
+        });
+      }
+    }
   }
 
   render() {
@@ -223,28 +682,62 @@ class Analytics extends Component {
             <div style={{ height: "calc(100% - 40px)", overflowY: "scroll" }}>
               <div className="d-flex">
                 <div className="mr-auto ml-5 mt-4">
-                  <h3>Dashboard</h3>
+                  <h3>Data Analytics</h3>
                 </div>
               </div>
 
               <div className="d-flex card-section">
                 <div className="cards-container">
                   <div className="card-bg w-100 border d-flex flex-column">
-                    <ButtonGroup aria-label="Basic example">
-                      <Button variant="secondary">1-min avg</Button>
-                      <Button
-                        onClick={this.handleChange5Min}
-                        variant="secondary"
+                    <div className="d-flex justify-content-between mb-3 border border-secondary">
+                      <select
+                        onChange={this.handleChange}
+                        style={{ height: "35px", width: "1030px" }}
                       >
-                        5-min avg
-                      </Button>
-                      <Button
-                        onClick={this.handleChange15Min}
-                        variant="secondary"
+                        <option value="2">Past 2 hours</option>
+                        <option value="12">Past 12 hours</option>
+                        <option value="24">Past 1 day</option>
+                      </select>
+                      <ButtonGroup
+                        style={{ height: "35px", width: "230px" }}
+                        aria-label="Basic example"
                       >
-                        15-min avg
-                      </Button>
-                    </ButtonGroup>
+                        <Button
+                          onClick={this.handleChange1Min}
+                          variant="secondary"
+                          size="sm"
+                          style={{
+                            fontSize: "10px",
+                            border: "1px solid #f2f2f2",
+                          }}
+                        >
+                          1-min avg
+                        </Button>
+                        <Button
+                          onClick={this.handleChange5Min}
+                          variant="secondary"
+                          size="sm"
+                          style={{
+                            fontSize: "10px",
+                            border: "1px solid #f2f2f2",
+                          }}
+                        >
+                          5-min avg
+                        </Button>
+                        <Button
+                          onClick={this.handleChange15Min}
+                          variant="secondary"
+                          size="sm"
+                          style={{
+                            fontSize: "10px",
+                            border: "1px solid #f2f2f2",
+                          }}
+                        >
+                          15-min avg
+                        </Button>
+                      </ButtonGroup>
+                    </div>
+
                     <Chart
                       options={this.state.options}
                       series={this.state.series}

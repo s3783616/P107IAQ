@@ -2,14 +2,11 @@ import React, { Component } from "react";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter as Router, Route } from "react-router-dom";
-
 import { Provider } from "react-redux";
 import store from "./store";
-
 import Dashboard from "./components/pages/Dashboard";
 import Register from "./components/UserManagement/Register";
 import Login from "./components/UserManagement/Login";
-import Survey from "./components/pages/Survey";
 import Guide from "./components/pages/Guide";
 import Analytics from "./components/pages/Analytics";
 import jwt_decode from "jwt-decode";

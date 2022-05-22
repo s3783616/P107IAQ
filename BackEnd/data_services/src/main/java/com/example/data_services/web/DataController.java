@@ -32,9 +32,9 @@ public class DataController {
 
     @GetMapping("/getData")
     public ResponseEntity<?> getData(@RequestParam(value = "deviceID", required = true) String deviceID,
-            @RequestParam(value = "dateFrom", required = true) String dateFrom,
-            @RequestParam(value = "dateTo", required = true) String dateTo,
-            @RequestParam(value = "dataType", required = true) String dataType) {
+                                     @RequestParam(value = "dateFrom", required = true) String dateFrom,
+                                     @RequestParam(value = "dateTo", required = true) String dateTo,
+                                     @RequestParam(value = "dataType", required = true) String dataType) {
         ArrayList<Response> responses = dataService.getData(deviceID, dataType, dateFrom, dateTo);
         if (responses == null)
             return new ResponseEntity<>("Invalid parameter", HttpStatus.BAD_REQUEST);
@@ -73,8 +73,8 @@ public class DataController {
 
     @GetMapping("/1minInterval")
     public ResponseEntity<?> getData1minIntv(@RequestParam(value = "deviceID", required = true) String deviceID,
-            @RequestParam(value = "dateFrom", required = true) String dateFrom,
-            @RequestParam(value = "dateTo", required = true) String dateTo) {
+                                             @RequestParam(value = "dateFrom", required = true) String dateFrom,
+                                             @RequestParam(value = "dateTo", required = true) String dateTo) {
         ArrayList<Response> responses = dataService.getData(deviceID, "raw", dateFrom, dateTo);
         String data = "";
 
@@ -135,28 +135,20 @@ public class DataController {
                     }
 
                     if ((i + 1) % interval == 0) {
-                        JSONArray result = new JSONArray();
+                        JSONObject result = new JSONObject();
                         JSONArray sensors_array = new JSONArray();
                         avg_score = avg_score / interval;
 
                         for (String key : map.keySet()) {
                             JSONObject pair = new JSONObject();
-                            pair.put("comp:", key);
-                            pair.put("value:", map.get(key) / interval);
+                            pair.put("comp", key);
+                            pair.put("value", map.get(key) / interval);
                             sensors_array.put(pair);
                             map.put(key, 0.0);
                         }
-                        JSONObject timestamp = new JSONObject();
-                        JSONObject score = new JSONObject();
-                        JSONObject sensor_array_warp = new JSONObject();
-
-                        timestamp.put("timestamp", jsonArray.getJSONObject(i + 1 - interval).get("timestamp"));
-                        score.put("score", avg_score);
-                        sensor_array_warp.put("sensors", sensors_array);
-
-                        result.put(timestamp);
-                        result.put(score);
-                        result.put(sensor_array_warp);
+                        result.put("timestamp", jsonArray.getJSONObject(i + 1 - interval).get("timestamp"));
+                        result.put("score", avg_score);
+                        result.put("sensors", sensors_array);
                         result_array.put(result);
                         avg_score = 0.0;
                     }
@@ -169,7 +161,7 @@ public class DataController {
         }
         try {
             JSONObject deviceMetaData = new JSONObject();
-            deviceMetaData.put("device_id:", deviceID);
+            deviceMetaData.put("device_id", deviceID);
             result_array.put(deviceMetaData);
             data = data + result_array.toString(1);
         } catch (JSONException e) {

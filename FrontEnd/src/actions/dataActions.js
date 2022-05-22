@@ -56,7 +56,7 @@ export const getAvgData =
   };
 
 export const get1MinAvgData =
-  (deviceID = "") =>
+  (deviceID = "", dateFrom = "", dateTo = "") =>
   async (dispatch) => {
     try {
       const res = await axios.get(
@@ -64,14 +64,8 @@ export const get1MinAvgData =
         {
           params: {
             deviceID,
-            dateFrom:
-              new Date(new Date().getTime() - 10 * 60000)
-                .toISOString()
-                .substr(0, new Date().toISOString().length - 7) + "00",
-            dateTo:
-              new Date()
-                .toISOString()
-                .substr(0, new Date().toISOString().length - 7) + "00",
+            dateFrom,
+            dateTo,
           },
         }
       );
