@@ -154,23 +154,6 @@ class Analytics extends Component {
     }
   }
 
-  renderLoadingMessage() {
-    let date = Math.ceil(
-      (new Date(this.state.dateTo) - new Date(this.state.dateFrom)) / 3600000
-    );
-    if (date > 2 && this.state.dataType === "1-min-avg") {
-      return (
-        <div
-          className="alert alert-info alert-dismissible fade show"
-          role="alert"
-          id="alert"
-        >
-          Please wait for the update button to show!
-        </div>
-      );
-    }
-  }
-
   handleChange = (e) => {
     e.preventDefault();
     const orders = this.props.sensordata.graphdata;
@@ -212,12 +195,12 @@ class Analytics extends Component {
         this.setState({
           dateFrom: date,
         });
+        alert("👋 Please wait for the update button to show!");
         mybutton.disabled = true;
         setTimeout(function () {
           mybutton.disabled = false;
-          var alert = document.getElementById("alert");
-          alert.remove(alert);
         }, 9000);
+
         break;
       case "24":
         date =
@@ -229,12 +212,12 @@ class Analytics extends Component {
         this.setState({
           dateFrom: date,
         });
+        alert("👋 Please wait for the update button to show!");
         mybutton.disabled = true;
         setTimeout(function () {
           mybutton.disabled = false;
-          var alert = document.getElementById("alert");
-          alert.remove(alert);
         }, 9000);
+
         break;
       default:
         date =
@@ -323,14 +306,6 @@ class Analytics extends Component {
     let datediff = Math.ceil(
       (new Date(this.state.dateTo) - new Date(this.state.dateFrom)) / 3600000
     );
-    if (datediff > 2) {
-      mybutton.disabled = true;
-      setTimeout(function () {
-        mybutton.disabled = false;
-        var alert = document.getElementById("alert");
-        alert.remove(alert);
-      }, 9000);
-    }
 
     const orders = this.props.sensordata.graphdata;
     if (orders !== undefined) {
@@ -342,6 +317,13 @@ class Analytics extends Component {
         );
         this.setState({ dataType: "1-min-avg" });
       }
+    }
+    alert("👋 Please wait for the update button to show!");
+    if (datediff > 2) {
+      mybutton.disabled = true;
+      setTimeout(function () {
+        mybutton.disabled = false;
+      }, 9000);
     }
   }
 
