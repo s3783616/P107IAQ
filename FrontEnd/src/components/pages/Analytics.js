@@ -63,6 +63,25 @@ class Analytics extends Component {
           zoom: {
             enabled: false,
           },
+          toolbar: {
+            export: {
+              csv: {
+                filename: undefined,
+                columnDelimiter: ",",
+                headerCategory: "category",
+                headerValue: "value",
+                dateFormatter(timestamp) {
+                  return new Date(timestamp).toString();
+                },
+              },
+              svg: {
+                filename: undefined,
+              },
+              png: {
+                filename: undefined,
+              },
+            },
+          },
         },
         dataLabels: {
           enabled: false,
@@ -135,6 +154,23 @@ class Analytics extends Component {
     }
   }
 
+  renderLoadingMessage() {
+    let date = Math.ceil(
+      (new Date(this.state.dateTo) - new Date(this.state.dateFrom)) / 3600000
+    );
+    if (date > 2 && this.state.dataType === "1-min-avg") {
+      return (
+        <div
+          className="alert alert-info alert-dismissible fade show"
+          role="alert"
+          id="alert"
+        >
+          Please wait for the update button to show!
+        </div>
+      );
+    }
+  }
+
   handleChange = (e) => {
     e.preventDefault();
     const orders = this.props.sensordata.graphdata;
@@ -152,6 +188,8 @@ class Analytics extends Component {
 
   pickDateRange1MinAvg(datetime) {
     let date = null;
+    var mybutton = document.getElementById("updatechart");
+
     switch (datetime) {
       case "2":
         date =
@@ -174,6 +212,12 @@ class Analytics extends Component {
         this.setState({
           dateFrom: date,
         });
+        mybutton.disabled = true;
+        setTimeout(function () {
+          mybutton.disabled = false;
+          var alert = document.getElementById("alert");
+          alert.remove(alert);
+        }, 9000);
         break;
       case "24":
         date =
@@ -185,6 +229,12 @@ class Analytics extends Component {
         this.setState({
           dateFrom: date,
         });
+        mybutton.disabled = true;
+        setTimeout(function () {
+          mybutton.disabled = false;
+          var alert = document.getElementById("alert");
+          alert.remove(alert);
+        }, 9000);
         break;
       default:
         date =
@@ -269,6 +319,19 @@ class Analytics extends Component {
   }
 
   handleChange1Min() {
+    var mybutton = document.getElementById("updatechart");
+    let datediff = Math.ceil(
+      (new Date(this.state.dateTo) - new Date(this.state.dateFrom)) / 3600000
+    );
+    if (datediff > 2) {
+      mybutton.disabled = true;
+      setTimeout(function () {
+        mybutton.disabled = false;
+        var alert = document.getElementById("alert");
+        alert.remove(alert);
+      }, 9000);
+    }
+
     const orders = this.props.sensordata.graphdata;
     if (orders !== undefined) {
       if (orders.length > 1) {
@@ -357,7 +420,6 @@ class Analytics extends Component {
       data.push(date.getTime() + 600 * 60000);
       orders[i].sensors.map((sensor) => {
         if (sensor.comp === "temp") {
-          console.log(sensor.value);
           data.push(sensor.value);
         } else {
           return null;
@@ -405,7 +467,6 @@ class Analytics extends Component {
       data.push(date.getTime() + 600 * 60000);
       orders[i].sensors.map((sensor) => {
         if (sensor.comp === "humid") {
-          console.log(sensor.value);
           data.push(sensor.value);
         } else {
           return null;
@@ -453,7 +514,6 @@ class Analytics extends Component {
       data.push(date.getTime() + 600 * 60000);
       orders[i].sensors.map((sensor) => {
         if (sensor.comp === "co2") {
-          console.log(sensor.value);
           data.push(sensor.value);
         } else {
           return null;
@@ -501,7 +561,6 @@ class Analytics extends Component {
       data.push(date.getTime() + 600 * 60000);
       orders[i].sensors.map((sensor) => {
         if (sensor.comp === "voc") {
-          console.log(sensor.value);
           data.push(sensor.value);
         } else {
           return null;
@@ -549,7 +608,6 @@ class Analytics extends Component {
       data.push(date.getTime() + 600 * 60000);
       orders[i].sensors.map((sensor) => {
         if (sensor.comp === "pm25") {
-          console.log(sensor.value);
           data.push(sensor.value);
         } else {
           return null;
@@ -585,11 +643,16 @@ class Analytics extends Component {
     });
     return graph;
   }
+  sleep(milliseconds) {
+    const start = Date.now();
+    while (Date.now() - start < milliseconds);
+  }
 
   updateCharts() {
     const newMixedSeries = [];
     const orders = this.props.sensordata.graphdata;
     const graph = [];
+
     if (orders !== undefined) {
       if (this.state.dataType !== "1-min-avg") {
         //
@@ -605,27 +668,43 @@ class Analytics extends Component {
         newMixedSeries.push({ data: graph4 });
         newMixedSeries.push({ data: graph5 });
         newMixedSeries.push({ data: graph6 });
+        let graphTitle =
+          "Device " +
+          orders[1].device_id +
+          " ( " +
+          this.state.dataType +
+          " AWAIR score past " +
+          Math.ceil(
+            (new Date(this.state.dateTo) - new Date(this.state.dateFrom)) /
+              3600000
+          ) +
+          " hours )";
         this.setState({
           series: newMixedSeries,
           options: {
             title: {
-              text:
-                "Device " +
-                orders[1].device_id +
-                " ( " +
-                this.state.dataType +
-                " AWAIR score past " +
-                Math.ceil(
-                  (new Date(this.state.dateTo) -
-                    new Date(this.state.dateFrom)) /
-                    3600000
-                ) +
-                " hours )",
+              text: graphTitle,
+            },
+            chart: {
+              toolbar: {
+                export: {
+                  csv: {
+                    filename: graphTitle,
+                  },
+                  svg: {
+                    filename: graphTitle,
+                  },
+                  png: {
+                    filename: graphTitle,
+                  },
+                },
+              },
             },
           },
         });
       } else {
         //
+
         let length = orders.length;
         let graph = this.updateChartsScore1MinAvg();
         let graph2 = this.updateChartsTemp1MinAvg();
@@ -639,22 +718,37 @@ class Analytics extends Component {
         newMixedSeries.push({ data: graph4 });
         newMixedSeries.push({ data: graph5 });
         newMixedSeries.push({ data: graph6 });
+        let graphTitle =
+          "Device " +
+          orders[length - 1].device_id +
+          " ( " +
+          this.state.dataType +
+          " AWAIR score past " +
+          Math.ceil(
+            (new Date(this.state.dateTo) - new Date(this.state.dateFrom)) /
+              3600000
+          ) +
+          " hours )";
         this.setState({
           series: newMixedSeries,
           options: {
             title: {
-              text:
-                "Device " +
-                orders[length - 1].device_id +
-                " ( " +
-                this.state.dataType +
-                " AWAIR score past " +
-                Math.ceil(
-                  (new Date(this.state.dateTo) -
-                    new Date(this.state.dateFrom)) /
-                    3600000
-                ) +
-                " hours )",
+              text: graphTitle,
+            },
+            chart: {
+              toolbar: {
+                export: {
+                  csv: {
+                    filename: graphTitle,
+                  },
+                  svg: {
+                    filename: graphTitle,
+                  },
+                  png: {
+                    filename: graphTitle,
+                  },
+                },
+              },
             },
           },
         });
@@ -744,7 +838,9 @@ class Analytics extends Component {
                       type="line"
                       height={450}
                     ></Chart>
-                    <button onClick={this.updateCharts}>Update!</button>
+                    <button id="updatechart" onClick={this.updateCharts}>
+                      Update!
+                    </button>
                   </div>
                 </div>
               </div>
