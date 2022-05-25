@@ -16,9 +16,9 @@ class Analytics extends Component {
   constructor(props) {
     super(props);
     this.updateCharts = this.updateCharts.bind(this);
-    this.handleChange1MinAvg = this.handleChange1MinAvg.bind(this);
-    this.handleChange5MinAvg = this.handleChange5MinAvg.bind(this);
-    this.handleChange15MinAvg = this.handleChange15MinAvg.bind(this);
+    this.handleChange1Min = this.handleChange1Min.bind(this);
+    this.handleChange5Min = this.handleChange5Min.bind(this);
+    this.handleChange15Min = this.handleChange15Min.bind(this);
     this.state = {
       deviceid: " ",
       dateFrom:
@@ -142,46 +142,13 @@ class Analytics extends Component {
     if (orders !== undefined) {
       if (orders.length > 1) {
         const deviceid = orders[orders.length - 1].device_id;
-
+        console.log(deviceid);
         this.props.getAvgData(
           deviceid,
           this.state.dateFrom,
           this.state.dateTo,
           this.state.dataType
         );
-        let graphTitle =
-          "Device " +
-          deviceid +
-          " ( " +
-          this.state.dataType +
-          " AWAIR score past " +
-          Math.ceil(
-            (new Date(this.state.dateTo) - new Date(this.state.dateFrom)) /
-              3600000
-          ) +
-          " hours )";
-        this.setState({
-          options: {
-            title: {
-              text: graphTitle,
-            },
-            chart: {
-              toolbar: {
-                export: {
-                  csv: {
-                    filename: graphTitle,
-                  },
-                  svg: {
-                    filename: graphTitle,
-                  },
-                  png: {
-                    filename: graphTitle,
-                  },
-                },
-              },
-            },
-          },
-        });
         this.setState({ deviceid: deviceid });
       }
     }
@@ -193,13 +160,18 @@ class Analytics extends Component {
 
     if (orders !== undefined) {
       if (orders.length > 1) {
-        this.pickDate(e.target.value);
+        if (this.state.dataType === "1-min-avg") {
+          this.pickDateRange1MinAvg(e.target.value);
+        } else {
+          this.pickDateRangeNot1MinAvg(e.target.value);
+        }
       }
     }
   };
 
-  pickDate(datetime) {
+  pickDateRange1MinAvg(datetime) {
     let date = null;
+    var mybutton = document.getElementById("updatechart");
 
     switch (datetime) {
       case "2":
@@ -207,6 +179,8 @@ class Analytics extends Component {
           new Date(new Date().getTime() - 120 * 60000)
             .toISOString()
             .substr(0, new Date().toISOString().length - 7) + "00";
+
+        this.props.get1MinAvgData(this.state.deviceid, date, this.state.dateTo);
         this.setState({
           dateFrom: date,
         });
@@ -216,6 +190,79 @@ class Analytics extends Component {
           new Date(new Date().getTime() - 720 * 60000)
             .toISOString()
             .substr(0, new Date().toISOString().length - 7) + "00";
+
+        this.props.get1MinAvgData(this.state.deviceid, date, this.state.dateTo);
+        this.setState({
+          dateFrom: date,
+        });
+        alert("👋 Please wait for the update button to show!");
+        mybutton.disabled = true;
+        setTimeout(function () {
+          mybutton.disabled = false;
+        }, 9000);
+
+        break;
+      case "24":
+        date =
+          new Date(new Date().getTime() - 1440 * 60000)
+            .toISOString()
+            .substr(0, new Date().toISOString().length - 7) + "00";
+
+        this.props.get1MinAvgData(this.state.deviceid, date, this.state.dateTo);
+        this.setState({
+          dateFrom: date,
+        });
+        alert("👋 Please wait for the update button to show!");
+        mybutton.disabled = true;
+        setTimeout(function () {
+          mybutton.disabled = false;
+        }, 9000);
+
+        break;
+      default:
+        date =
+          new Date(new Date().getTime() - 120 * 60000)
+            .toISOString()
+            .substr(0, new Date().toISOString().length - 7) + "00";
+
+        this.props.get1MinAvgData(this.state.deviceid, date, this.state.dateTo);
+        this.setState({
+          dateFrom: date,
+        });
+    }
+  }
+
+  pickDateRangeNot1MinAvg(datetime) {
+    let date = null;
+    switch (datetime) {
+      case "2":
+        date =
+          new Date(new Date().getTime() - 120 * 60000)
+            .toISOString()
+            .substr(0, new Date().toISOString().length - 7) + "00";
+
+        this.props.getAvgData(
+          this.state.deviceid,
+          date,
+          this.state.dateTo,
+          this.state.dataType
+        );
+        this.setState({
+          dateFrom: date,
+        });
+        break;
+      case "12":
+        date =
+          new Date(new Date().getTime() - 720 * 60000)
+            .toISOString()
+            .substr(0, new Date().toISOString().length - 7) + "00";
+
+        this.props.getAvgData(
+          this.state.deviceid,
+          date,
+          this.state.dateTo,
+          this.state.dataType
+        );
         this.setState({
           dateFrom: date,
         });
@@ -225,42 +272,89 @@ class Analytics extends Component {
           new Date(new Date().getTime() - 1440 * 60000)
             .toISOString()
             .substr(0, new Date().toISOString().length - 7) + "00";
+
+        this.props.getAvgData(
+          this.state.deviceid,
+          date,
+          this.state.dateTo,
+          this.state.dataType
+        );
         this.setState({
           dateFrom: date,
         });
-
         break;
       default:
         date =
           new Date(new Date().getTime() - 120 * 60000)
             .toISOString()
             .substr(0, new Date().toISOString().length - 7) + "00";
+
+        this.props.getAvgData(
+          this.state.deviceid,
+          date,
+          this.state.dateTo,
+          this.state.dataType
+        );
         this.setState({
           dateFrom: date,
         });
     }
   }
 
-  handleChange1MinAvg() {
-    const orders = this.props.sensordata.graphdata;
-    if (orders !== undefined) {
-      this.setState({ dataType: "1-min-avg" });
-    }
-  }
+  handleChange1Min() {
+    var mybutton = document.getElementById("updatechart");
+    let datediff = Math.ceil(
+      (new Date(this.state.dateTo) - new Date(this.state.dateFrom)) / 3600000
+    );
 
-  handleChange5MinAvg() {
     const orders = this.props.sensordata.graphdata;
     if (orders !== undefined) {
       if (orders.length > 1) {
+        this.props.get1MinAvgData(
+          this.state.deviceid,
+          this.state.dateFrom,
+          this.state.dateTo
+        );
+        this.setState({ dataType: "1-min-avg" });
+      }
+    }
+
+    if (datediff > 2) {
+      alert("👋 Please wait for the update button to show!");
+      mybutton.disabled = true;
+      setTimeout(function () {
+        mybutton.disabled = false;
+      }, 9000);
+    }
+  }
+
+  handleChange5Min() {
+    const orders = this.props.sensordata.graphdata;
+    console.log(orders);
+    if (orders !== undefined) {
+      if (orders.length > 1) {
+        this.props.getAvgData(
+          this.state.deviceid,
+          this.state.dateFrom,
+          this.state.dateTo,
+          "5-min-avg"
+        );
         this.setState({ dataType: "5-min-avg" });
       }
     }
   }
 
-  handleChange15MinAvg() {
+  handleChange15Min() {
     const orders = this.props.sensordata.graphdata;
+    console.log(this.state.dateFrom);
     if (orders !== undefined) {
       if (orders.length > 1) {
+        this.props.getAvgData(
+          this.state.deviceid,
+          this.state.dateFrom,
+          this.state.dateTo,
+          "15-min-avg"
+        );
         this.setState({ dataType: "15-min-avg" });
       }
     }
@@ -283,21 +377,18 @@ class Analytics extends Component {
   updateChartsScoreNot1MinAvg() {
     const orders = this.props.sensordata.graphdata;
     const graph = [];
-    if (this.state.dataType !== "1-min-avg") {
-      orders[0].map((order) => {
-        let data = [];
-        for (var i = 0; i < 2; i++) {
-          if (i === 0) {
-            let date = new Date(order.timestamp);
-            data.push(date.getTime() + 600 * 60000);
-          } else {
-            data.push(order.score);
-          }
+    orders[0].map((order) => {
+      let data = [];
+      for (var i = 0; i < 2; i++) {
+        if (i === 0) {
+          let date = new Date(order.timestamp);
+          data.push(date.getTime() + 600 * 60000);
+        } else {
+          data.push(order.score);
         }
-        graph.push(data);
-      });
-    }
-
+      }
+      graph.push(data);
+    });
     return graph;
   }
 
@@ -327,26 +418,24 @@ class Analytics extends Component {
   updateChartsTempNot1MinAvg() {
     const orders = this.props.sensordata.graphdata;
     const graph = [];
-    if (this.state.dataType !== "1-min-avg") {
-      orders[0].map((order) => {
-        let data = [];
-        for (var i = 0; i < 2; i++) {
-          if (i === 0) {
-            let date = new Date(order.timestamp);
-            data.push(date.getTime() + 600 * 60000);
-          } else {
-            order.sensors.map((sensor) => {
-              if (sensor.comp === "temp") {
-                data.push(sensor.value);
-              } else {
-                return null;
-              }
-            });
-          }
+    orders[0].map((order) => {
+      let data = [];
+      for (var i = 0; i < 2; i++) {
+        if (i === 0) {
+          let date = new Date(order.timestamp);
+          data.push(date.getTime() + 600 * 60000);
+        } else {
+          order.sensors.map((sensor) => {
+            if (sensor.comp === "temp") {
+              data.push(sensor.value);
+            } else {
+              return null;
+            }
+          });
         }
-        graph.push(data);
-      });
-    }
+      }
+      graph.push(data);
+    });
     return graph;
   }
 
@@ -376,26 +465,24 @@ class Analytics extends Component {
   updateChartsHumidNot1MinAvg() {
     const orders = this.props.sensordata.graphdata;
     const graph = [];
-    if (this.state.dataType !== "1-min-avg") {
-      orders[0].map((order) => {
-        let data = [];
-        for (var i = 0; i < 2; i++) {
-          if (i === 0) {
-            let date = new Date(order.timestamp);
-            data.push(date.getTime() + 600 * 60000);
-          } else {
-            order.sensors.map((sensor) => {
-              if (sensor.comp === "humid") {
-                data.push(sensor.value);
-              } else {
-                return null;
-              }
-            });
-          }
+    orders[0].map((order) => {
+      let data = [];
+      for (var i = 0; i < 2; i++) {
+        if (i === 0) {
+          let date = new Date(order.timestamp);
+          data.push(date.getTime() + 600 * 60000);
+        } else {
+          order.sensors.map((sensor) => {
+            if (sensor.comp === "humid") {
+              data.push(sensor.value);
+            } else {
+              return null;
+            }
+          });
         }
-        graph.push(data);
-      });
-    }
+      }
+      graph.push(data);
+    });
     return graph;
   }
 
@@ -425,26 +512,24 @@ class Analytics extends Component {
   updateChartsCO2Not1MinAvg() {
     const orders = this.props.sensordata.graphdata;
     const graph = [];
-    if (this.state.dataType !== "1-min-avg") {
-      orders[0].map((order) => {
-        let data = [];
-        for (var i = 0; i < 2; i++) {
-          if (i === 0) {
-            let date = new Date(order.timestamp);
-            data.push(date.getTime() + 600 * 60000);
-          } else {
-            order.sensors.map((sensor) => {
-              if (sensor.comp === "co2") {
-                data.push(sensor.value);
-              } else {
-                return null;
-              }
-            });
-          }
+    orders[0].map((order) => {
+      let data = [];
+      for (var i = 0; i < 2; i++) {
+        if (i === 0) {
+          let date = new Date(order.timestamp);
+          data.push(date.getTime() + 600 * 60000);
+        } else {
+          order.sensors.map((sensor) => {
+            if (sensor.comp === "co2") {
+              data.push(sensor.value);
+            } else {
+              return null;
+            }
+          });
         }
-        graph.push(data);
-      });
-    }
+      }
+      graph.push(data);
+    });
     return graph;
   }
 
@@ -454,6 +539,7 @@ class Analytics extends Component {
     let length = orders.length;
     for (var i = 0; i < length - 2; i++) {
       let data = [];
+
       let date = new Date(orders[i].timestamp);
       data.push(date.getTime() + 600 * 60000);
       orders[i].sensors.map((sensor) => {
@@ -473,26 +559,24 @@ class Analytics extends Component {
   updateChartsVOCNot1MinAvg() {
     const orders = this.props.sensordata.graphdata;
     const graph = [];
-    if (this.state.dataType !== "1-min-avg") {
-      orders[0].map((order) => {
-        let data = [];
-        for (var i = 0; i < 2; i++) {
-          if (i === 0) {
-            let date = new Date(order.timestamp);
-            data.push(date.getTime() + 600 * 60000);
-          } else {
-            order.sensors.map((sensor) => {
-              if (sensor.comp === "voc") {
-                data.push(sensor.value);
-              } else {
-                return null;
-              }
-            });
-          }
+    orders[0].map((order) => {
+      let data = [];
+      for (var i = 0; i < 2; i++) {
+        if (i === 0) {
+          let date = new Date(order.timestamp);
+          data.push(date.getTime() + 600 * 60000);
+        } else {
+          order.sensors.map((sensor) => {
+            if (sensor.comp === "voc") {
+              data.push(sensor.value);
+            } else {
+              return null;
+            }
+          });
         }
-        graph.push(data);
-      });
-    }
+      }
+      graph.push(data);
+    });
     return graph;
   }
 
@@ -522,114 +606,39 @@ class Analytics extends Component {
   updateChartsPM25Not1MinAvg() {
     const orders = this.props.sensordata.graphdata;
     const graph = [];
-    if (this.state.dataType !== "1-min-avg") {
-      orders[0].map((order) => {
-        let data = [];
-        for (var i = 0; i < 2; i++) {
-          if (i === 0) {
-            let date = new Date(order.timestamp);
-            data.push(date.getTime() + 600 * 60000);
-          } else {
-            order.sensors.map((sensor) => {
-              if (sensor.comp === "pm25") {
-                data.push(sensor.value);
-              } else {
-                return null;
-              }
-            });
-          }
+    orders[0].map((order) => {
+      let data = [];
+      for (var i = 0; i < 2; i++) {
+        if (i === 0) {
+          let date = new Date(order.timestamp);
+          data.push(date.getTime() + 600 * 60000);
+        } else {
+          order.sensors.map((sensor) => {
+            if (sensor.comp === "pm25") {
+              data.push(sensor.value);
+            } else {
+              return null;
+            }
+          });
         }
-        graph.push(data);
-      });
-    }
+      }
+      graph.push(data);
+    });
     return graph;
+  }
+  sleep(milliseconds) {
+    const start = Date.now();
+    while (Date.now() - start < milliseconds);
   }
 
   updateCharts() {
-    var mybutton = document.getElementById("updatechart");
-    var datediff = Math.ceil(
-      (new Date(this.state.dateTo) - new Date(this.state.dateFrom)) / 3600000
-    );
-    if (this.state.dataType === "1-min-avg") {
-      this.props.get1MinAvgData(
-        this.state.deviceid,
-        this.state.dateFrom,
-        this.state.dateTo
-      );
-    } else {
-      this.props.getAvgData(
-        this.state.deviceid,
-        this.state.dateFrom,
-        this.state.dateTo,
-        this.state.dataType
-      );
-    }
-
-    let graphTitle =
-      "Device " +
-      this.state.deviceid +
-      " ( " +
-      this.state.dataType +
-      " AWAIR score past " +
-      datediff +
-      " hours )";
-    this.setState({
-      options: {
-        title: {
-          text: graphTitle,
-        },
-        chart: {
-          toolbar: {
-            export: {
-              csv: {
-                filename: graphTitle,
-              },
-              svg: {
-                filename: graphTitle,
-              },
-              png: {
-                filename: graphTitle,
-              },
-            },
-          },
-        },
-      },
-    });
-    console.log(datediff);
-    if (this.state.dataType === "1-min-avg") {
-      if (datediff === 12) {
-        mybutton.disabled = true;
-        setTimeout(function () {
-          mybutton.disabled = false;
-        }, 3250);
-      } else if (datediff === 24) {
-        mybutton.disabled = true;
-        setTimeout(function () {
-          mybutton.disabled = false;
-        }, 6500);
-      } else {
-        mybutton.disabled = true;
-        setTimeout(function () {
-          mybutton.disabled = false;
-        }, 500);
-      }
-    } else {
-      mybutton.disabled = true;
-      setTimeout(function () {
-        mybutton.disabled = false;
-      }, 500);
-    }
-  }
-
-  renderChart() {
     const newMixedSeries = [];
     const orders = this.props.sensordata.graphdata;
     const graph = [];
-    console.log(orders);
-    if (orders !== undefined && orders.length > 1) {
-      if (this.state.dataType !== "1-min-avg" && orders.length < 3) {
-        //
 
+    if (orders !== undefined) {
+      if (this.state.dataType !== "1-min-avg") {
+        //
         let graph = this.updateChartsScoreNot1MinAvg();
         let graph2 = this.updateChartsTempNot1MinAvg();
         let graph3 = this.updateChartsHumidNot1MinAvg();
@@ -642,16 +651,43 @@ class Analytics extends Component {
         newMixedSeries.push({ data: graph4 });
         newMixedSeries.push({ data: graph5 });
         newMixedSeries.push({ data: graph6 });
-
-        return (
-          <Chart
-            options={this.state.options}
-            series={newMixedSeries}
-            type="line"
-            height={450}
-          ></Chart>
-        );
+        let graphTitle =
+          "Device " +
+          orders[1].device_id +
+          " ( " +
+          this.state.dataType +
+          " AWAIR score past " +
+          Math.ceil(
+            (new Date(this.state.dateTo) - new Date(this.state.dateFrom)) /
+              3600000
+          ) +
+          " hours )";
+        this.setState({
+          series: newMixedSeries,
+          options: {
+            title: {
+              text: graphTitle,
+            },
+            chart: {
+              toolbar: {
+                export: {
+                  csv: {
+                    filename: graphTitle,
+                  },
+                  svg: {
+                    filename: graphTitle,
+                  },
+                  png: {
+                    filename: graphTitle,
+                  },
+                },
+              },
+            },
+          },
+        });
       } else {
+        //
+
         let length = orders.length;
         let graph = this.updateChartsScore1MinAvg();
         let graph2 = this.updateChartsTemp1MinAvg();
@@ -665,25 +701,41 @@ class Analytics extends Component {
         newMixedSeries.push({ data: graph4 });
         newMixedSeries.push({ data: graph5 });
         newMixedSeries.push({ data: graph6 });
-
-        return (
-          <Chart
-            options={this.state.options}
-            series={newMixedSeries}
-            type="line"
-            height={450}
-          ></Chart>
-        );
+        let graphTitle =
+          "Device " +
+          orders[length - 1].device_id +
+          " ( " +
+          this.state.dataType +
+          " AWAIR score past " +
+          Math.ceil(
+            (new Date(this.state.dateTo) - new Date(this.state.dateFrom)) /
+              3600000
+          ) +
+          " hours )";
+        this.setState({
+          series: newMixedSeries,
+          options: {
+            title: {
+              text: graphTitle,
+            },
+            chart: {
+              toolbar: {
+                export: {
+                  csv: {
+                    filename: graphTitle,
+                  },
+                  svg: {
+                    filename: graphTitle,
+                  },
+                  png: {
+                    filename: graphTitle,
+                  },
+                },
+              },
+            },
+          },
+        });
       }
-    } else {
-      return (
-        <Chart
-          options={this.state.options}
-          series={this.state.series}
-          type="line"
-          height={450}
-        ></Chart>
-      );
     }
   }
 
@@ -728,7 +780,7 @@ class Analytics extends Component {
                         aria-label="Basic example"
                       >
                         <Button
-                          onClick={this.handleChange1MinAvg}
+                          onClick={this.handleChange1Min}
                           variant="secondary"
                           size="sm"
                           style={{
@@ -739,7 +791,7 @@ class Analytics extends Component {
                           1-min avg
                         </Button>
                         <Button
-                          onClick={this.handleChange5MinAvg}
+                          onClick={this.handleChange5Min}
                           variant="secondary"
                           size="sm"
                           style={{
@@ -750,11 +802,12 @@ class Analytics extends Component {
                           5-min avg
                         </Button>
                         <Button
-                          onClick={this.handleChange15MinAvg}
+                          onClick={this.handleChange15Min}
                           variant="secondary"
                           size="sm"
                           style={{
                             fontSize: "10px",
+                            border: "1px solid #f2f2f2",
                           }}
                         >
                           15-min avg
@@ -762,7 +815,12 @@ class Analytics extends Component {
                       </ButtonGroup>
                     </div>
 
-                    {this.renderChart()}
+                    <Chart
+                      options={this.state.options}
+                      series={this.state.series}
+                      type="line"
+                      height={450}
+                    ></Chart>
                     <button id="updatechart" onClick={this.updateCharts}>
                       Update!
                     </button>
