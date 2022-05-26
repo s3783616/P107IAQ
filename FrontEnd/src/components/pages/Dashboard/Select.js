@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getSearchedData } from "../../actions/dataActions";
-import { Alert, Form, FormControl, Button } from "react-bootstrap";
+import { getSearchedData } from "../../../actions/dataActions";
+import { Form, Button } from "react-bootstrap";
 
 class Select extends Component {
   state = {

@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./store";
-import Dashboard from "./components/pages/Dashboard";
+import Dashboard from "./components/pages/Dashboard/Dashboard";
 import Register from "./components/UserManagement/Register";
 import Login from "./components/UserManagement/Login";
 import Guide from "./components/pages/Guide";
