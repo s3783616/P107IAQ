@@ -1,0 +1,11 @@
+export const GET_ERRORS = "GET_ERRORS";
+export const SET_CURRENT_USER = "SET_CURRENT_USER";
+
+export const GET_ORDERS = "GET_ORDERS";
+export const GET_SEARCHED_ORDERS = "GET_CUSTOMER_ORDERS";
+export const GET_ORDER = "GET_ORDER";
+export const CANCEL_ORDER = "CANCEL_ORDER";
+
+export const GET_SEARCHED_DATA = "GET_SEARCHED_DATA";
+export const GET_AVG_DATA = "GET_AVG_DATA";
+export const GET_1MIN_AVG_DATA = "GET_1MIN_AVG_DATA";
