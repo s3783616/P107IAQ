@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Alert, Button, ButtonGroup } from "react-bootstrap";
+import { Button, ButtonGroup } from "react-bootstrap";
 import { connect } from "react-redux";
 import {
   getSearchedData,
@@ -218,8 +218,6 @@ class Analytics extends Component {
   }
 
   pickDate(datetime) {
-    let date = null;
-
     switch (datetime) {
       case "2":
         this.setDateState(120);
@@ -277,20 +275,20 @@ class Analytics extends Component {
   updateChartsScoreNot1MinAvg() {
     const orders = this.props.sensordata.graphdata;
     const graph = [];
-    if (this.state.dataType !== "1-min-avg") {
-      orders[0].map((order) => {
-        let data = [];
-        for (var i = 0; i < 2; i++) {
-          if (i === 0) {
-            let date = new Date(order.timestamp);
-            data.push(date.toLocaleString());
-          } else {
-            data.push(order.score);
-          }
+
+    orders[0].map((order) => {
+      let data = [];
+      for (var i = 0; i < 2; i++) {
+        if (i === 0) {
+          let date = new Date(order.timestamp);
+          data.push(date.toLocaleString());
+        } else {
+          data.push(order.score);
         }
-        graph.push(data);
-      });
-    }
+      }
+      graph.push(data);
+    });
+
     return graph;
   }
 
@@ -305,8 +303,6 @@ class Analytics extends Component {
       orders[i].sensors.map((sensor) => {
         if (sensor.comp === comp) {
           data.push(sensor.value);
-        } else {
-          return null;
         }
       });
       graph.push(data);
@@ -317,26 +313,24 @@ class Analytics extends Component {
   updateChartsTypeNot1MinAvg(comp) {
     const orders = this.props.sensordata.graphdata;
     const graph = [];
-    if (this.state.dataType !== "1-min-avg") {
-      orders[0].map((order) => {
-        let data = [];
-        for (var i = 0; i < 2; i++) {
-          if (i === 0) {
-            let date = new Date(order.timestamp);
-            data.push(date.toLocaleString());
-          } else {
-            order.sensors.map((sensor) => {
-              if (sensor.comp === comp) {
-                data.push(sensor.value);
-              } else {
-                return null;
-              }
-            });
-          }
+
+    orders[0].map((order) => {
+      let data = [];
+      for (var i = 0; i < 2; i++) {
+        if (i === 0) {
+          let date = new Date(order.timestamp);
+          data.push(date.toLocaleString());
+        } else {
+          order.sensors.map((sensor) => {
+            if (sensor.comp === comp) {
+              data.push(sensor.value);
+            }
+          });
         }
-        graph.push(data);
-      });
-    }
+      }
+      graph.push(data);
+    });
+
     return graph;
   }
 
@@ -376,7 +370,7 @@ class Analytics extends Component {
       if (datediff === 12) {
         this.disableButton(mybutton, 3250);
       } else if (datediff === 24) {
-        this.disableButton(mybutton, 6500);
+        this.disableButton(mybutton, 7000);
       } else {
         this.disableButton(mybutton, 500);
       }
@@ -388,7 +382,7 @@ class Analytics extends Component {
   renderChart() {
     const newMixedSeries = [];
     const orders = this.props.sensordata.graphdata;
-    const graph = [];
+
     if (orders !== undefined && orders.length > 1) {
       if (this.state.dataType !== "1-min-avg" && orders.length < 3) {
         let graph = this.updateChartsScoreNot1MinAvg();
@@ -412,7 +406,6 @@ class Analytics extends Component {
           ></Chart>
         );
       } else {
-        let length = orders.length;
         let graph = this.updateChartsScore1MinAvg();
         let graph2 = this.updateChartsType1MinAvg("temp");
         let graph3 = this.updateChartsType1MinAvg("humid");
