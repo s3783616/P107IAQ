@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Alert } from "react-bootstrap";
 import { connect } from "react-redux";
 import { getSearchedData } from "../../../actions/dataActions";
 import Select from "./Select";
@@ -10,37 +9,17 @@ import Score from "./Score";
 import Notification from "./Notification";
 
 class Dashboard extends Component {
-  state = {
-    refresh: false,
-    device: " ",
-  };
-
   constructor(props) {
     super(props);
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
-
-    this.setState({ refresh: false });
+    this.state = {
+      device: " ",
+    };
   }
 
   onSearchSubmit(deviceid) {
     this.props.getSearchedData(deviceid);
     this.setState({ device: deviceid });
-  }
-
-  searchDeviceError() {
-    if (
-      this.state.device === "26203" ||
-      this.state.device === "25758" ||
-      this.state.device === " "
-    ) {
-      return null;
-    } else {
-      return (
-        <Alert key="danger" variant="danger" className="text-center">
-          Device {this.state.device} does not exist!
-        </Alert>
-      );
-    }
   }
 
   componentDidMount() {
@@ -102,7 +81,6 @@ class Dashboard extends Component {
                   </div>
                 </div>
               </div>
-              {this.searchDeviceError()}
               <div className="d-flex card-section">
                 <div className="cards-container-2">
                   <div className="card-bg w-100 border d-flex flex-column">

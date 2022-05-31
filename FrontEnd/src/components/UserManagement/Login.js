@@ -63,7 +63,10 @@ class Login extends Component {
     return (
       <div>
         <Header />
-        <div className="hero d-flex align-items-center auth py-5">
+        <div
+          className="hero d-flex align-items-center auth py-5"
+          style={{ height: 650 }}
+        >
           <div className="row w-100 mx-0">
             <div className="col-lg-5 mx-auto">
               <div className="auth-form-light text-left py-5 px-4 px-sm-5">

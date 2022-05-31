@@ -6,7 +6,7 @@ export const getSearchedData =
   async (dispatch) => {
     try {
       let dateNow = new Date();
-      let dateNext = new Date(dateNow.getTime() + 10 * 60000);
+      let dateNext = new Date(dateNow.getTime() + 1 * 60000);
       const res = await axios.get(`http://localhost:8081/api/data/getData`, {
         params: {
           deviceID,

@@ -145,7 +145,7 @@ class Analytics extends Component {
       deviceid +
       " ( " +
       dataType +
-      " AWAIR score past " +
+      " AWAIR AQI past " +
       Math.ceil((new Date(dateTo) - new Date(dateFrom)) / 3600000) +
       " hours )";
     this.setState({
@@ -456,7 +456,7 @@ class Analytics extends Component {
         >
           <Header />
           <div style={{ height: "100%" }}>
-            <div style={{ height: "calc(100% - 40px)", overflowY: "scroll" }}>
+            <div style={{ height: "calc(100% - 20px)", overflowY: "scroll" }}>
               <div className="d-flex">
                 <div className="mr-auto ml-5 mt-4">
                   <h3>Data Analytics</h3>
@@ -469,7 +469,7 @@ class Analytics extends Component {
                     <div className="d-flex justify-content-between mb-3 border border-secondary">
                       <select
                         onChange={this.handleDataRangeChange}
-                        style={{ height: "35px", width: "1030px" }}
+                        style={{ height: "35px", width: "1180px" }}
                       >
                         <option value="2">Past 2 hours</option>
                         <option value="12">Past 12 hours</option>

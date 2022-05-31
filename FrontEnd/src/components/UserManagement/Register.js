@@ -35,7 +35,6 @@ class Register extends Component {
   }
 
   onChange(e) {
-    console.log(e.target);
     this.setState({ [e.target.name]: e.target.value });
   }
 
@@ -43,10 +42,13 @@ class Register extends Component {
     return (
       <div>
         <Header />
-        <div className="hero d-flex align-items-center auth py-5">
+        <div
+          className="hero d-flex align-items-center auth py-5"
+          style={{ height: 650 }}
+        >
           <div className="row w-100 mx-0">
             <div className="col-lg-5 mx-auto">
-              <div className="auth-form-light text-left py-5 px-4 px-sm-5">
+              <div className="auth-form-light text-left py-0 px-5 px-sm-5">
                 <h1 classname="display-3">Register</h1>
                 <h4>New here?</h4>
                 <h6 className="font-weight-light">

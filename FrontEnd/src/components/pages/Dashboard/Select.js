@@ -27,7 +27,7 @@ class Select extends Component {
             <select
               deviceid={this.state.deviceid}
               onChange={this.handleChange}
-              style={{ height: "40px", width: "1120px" }}
+              style={{ height: "40px", width: "1250px" }}
             >
               <option value=" "></option>
               <option value="25758">25758 (RMIT Building 12, Floor 9)</option>
