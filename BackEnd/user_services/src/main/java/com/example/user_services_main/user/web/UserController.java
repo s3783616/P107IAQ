@@ -75,15 +75,8 @@ public class UserController {
 
     @Autowired
     private JwtTokenProvider tokenProvider;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-
-
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest, BindingResult result){
         ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
@@ -106,19 +99,6 @@ public class UserController {
                 return new ResponseEntity<>(results, HttpStatus.NOT_FOUND);
             }
         }
-        /*
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getUsername(),
-                        loginRequest.getPassword()
-                )
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = TOKEN_PREFIX +  tokenProvider.generateToken(authentication);
-
-        return ResponseEntity.ok(new JWTLoginSucessResponse(true, jwt));
-         */
-
     }
 
 }
