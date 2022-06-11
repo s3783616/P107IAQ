@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import Logo from "../../img/logo.png";
 
+//Header class
 class Header extends Component {
   constructor(props) {
     super(props);
@@ -80,7 +81,7 @@ class Header extends Component {
         <div className={"row w-100 justify-content-start"}>
           <div className={"col"}>
             <a className="navbar-brand ms-4" href="/dashboard">
-              <img src={Logo} style={{ width: "100px" }} />
+              <img src={Logo} alt="logo" style={{ width: "100px" }} />
             </a>
           </div>
 

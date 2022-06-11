@@ -30,7 +30,9 @@ class Analytics extends Component {
           .toISOString()
           .substr(0, new Date().toISOString().length - 7) + "00",
       dataType: "15-min-avg",
+      // props that can be pass to the React-ApexCharts component
       series: [
+        // The data which you want to display in the chart
         {
           name: "Awair Score",
           data: [],
@@ -58,14 +60,15 @@ class Analytics extends Component {
       ],
       options: {
         chart: {
-          height: 350,
-          type: "line",
+          height: 350, // Height of the chart
+          type: "line", // chart type
           zoom: {
             enabled: false,
           },
           toolbar: {
             export: {
               csv: {
+                // set csv download configurations
                 filename: undefined,
                 columnDelimiter: ",",
                 headerCategory: "category",
@@ -75,9 +78,11 @@ class Analytics extends Component {
                 },
               },
               svg: {
+                // set image download configurations in svg format
                 filename: undefined,
               },
               png: {
+                // set image download configurations in png format
                 filename: undefined,
               },
             },
@@ -96,7 +101,7 @@ class Analytics extends Component {
         },
         grid: {
           row: {
-            colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
+            colors: ["#f3f3f3", "transparent"],
             opacity: 0.5,
           },
         },
@@ -106,15 +111,16 @@ class Analytics extends Component {
             datetimeUTC: false,
           },
         },
+        // will display a box that display x and y coordinate when hover over a coordinate in graph
         tooltip: {
           y: {
             formatter: function (val) {
-              return val.toFixed(2);
+              return val.toFixed(2); // set value to 2 decimal places
             },
           },
           x: {
             show: true,
-            format: "dd/MM hh:mm TT",
+            format: "dd/MM hh:mm TT", // format date
           },
         },
 
@@ -127,10 +133,8 @@ class Analytics extends Component {
           },
           title: {
             text: "Score",
-
             style: {
               fontSize: "14px",
-
               fontWeight: 600,
             },
           },
@@ -139,6 +143,7 @@ class Analytics extends Component {
     };
   }
 
+  // set graph title and name of file downloaded
   setTitle(deviceid, dataType, dateFrom, dateTo) {
     let graphTitle =
       "Device " +
@@ -174,8 +179,9 @@ class Analytics extends Component {
 
   componentDidMount() {
     const orders = this.props.sensordata.data;
-
+    // if user has chosen the device id in dashboard page
     if (orders !== undefined) {
+      // if json object is complete
       if (orders.length > 1) {
         const deviceid = orders[orders.length - 1].device_id;
 
@@ -196,6 +202,7 @@ class Analytics extends Component {
     }
   }
 
+  // set time range to display graph data
   handleDataRangeChange = (e) => {
     e.preventDefault();
     const orders = this.props.sensordata.graphdata;
@@ -207,6 +214,7 @@ class Analytics extends Component {
     }
   };
 
+  // pass current datetime to props
   setDateState(range) {
     let date =
       new Date(new Date().getTime() - range * 60000)
@@ -217,6 +225,7 @@ class Analytics extends Component {
     });
   }
 
+  // capture user option on time range to display data
   pickDate(datetime) {
     switch (datetime) {
       case "2":
@@ -233,6 +242,7 @@ class Analytics extends Component {
     }
   }
 
+  // set the data type to 1 min average
   handleChange1MinAvg() {
     const orders = this.props.sensordata.graphdata;
     if (orders !== undefined) {
@@ -240,6 +250,7 @@ class Analytics extends Component {
     }
   }
 
+  // set the data type to 5 min average
   handleChange5MinAvg() {
     const orders = this.props.sensordata.graphdata;
     if (orders !== undefined) {
@@ -249,6 +260,7 @@ class Analytics extends Component {
     }
   }
 
+  // set the data type to 15 min average
   handleChange15MinAvg() {
     const orders = this.props.sensordata.graphdata;
     if (orders !== undefined) {
@@ -258,6 +270,7 @@ class Analytics extends Component {
     }
   }
 
+  // return charts data (awair score) in 1 min interval
   updateChartsScore1MinAvg() {
     const orders = this.props.sensordata.graphdata;
     const graph = [];
@@ -272,6 +285,7 @@ class Analytics extends Component {
     return graph;
   }
 
+  // return charts data (awair score) in 5 or 15 min interval
   updateChartsScoreNot1MinAvg() {
     const orders = this.props.sensordata.graphdata;
     const graph = [];
@@ -287,11 +301,13 @@ class Analytics extends Component {
         }
       }
       graph.push(data);
+      return graph;
     });
 
     return graph;
   }
 
+  // return charts data (other five Airdata type score) in 1 min interval
   updateChartsType1MinAvg(comp) {
     const orders = this.props.sensordata.graphdata;
     const graph = [];
@@ -304,12 +320,14 @@ class Analytics extends Component {
         if (sensor.comp === comp) {
           data.push(sensor.value);
         }
+        return graph;
       });
       graph.push(data);
     }
     return graph;
   }
 
+  // return charts data (other five Airdata type score) in 1 min interval
   updateChartsTypeNot1MinAvg(comp) {
     const orders = this.props.sensordata.graphdata;
     const graph = [];
@@ -325,15 +343,18 @@ class Analytics extends Component {
             if (sensor.comp === comp) {
               data.push(sensor.value);
             }
+            return graph;
           });
         }
       }
       graph.push(data);
+      return graph;
     });
 
     return graph;
   }
 
+  // disable update button for an amount of time set
   disableButton(mybutton, millisecond) {
     mybutton.disabled = true;
     setTimeout(function () {
@@ -341,18 +362,22 @@ class Analytics extends Component {
     }, millisecond);
   }
 
+  // update and render charts data and components
   updateCharts() {
     var mybutton = document.getElementById("updatechart");
     var datediff = Math.ceil(
       (new Date(this.state.dateTo) - new Date(this.state.dateFrom)) / 3600000
-    );
+    ); // time range
+    // if chart data needs to be rendered in 1 min interval
     if (this.state.dataType === "1-min-avg") {
       this.props.get1MinAvgData(
         this.state.deviceid,
         this.state.dateFrom,
         this.state.dateTo
       );
-    } else {
+    }
+    // if chart data needs to be rendered in 5 or 15 min interval
+    else {
       this.props.getAvgData(
         this.state.deviceid,
         this.state.dateFrom,
@@ -379,11 +404,13 @@ class Analytics extends Component {
     }
   }
 
+  // pass data extracted from json onject to props
   renderChart() {
     const newMixedSeries = [];
     const orders = this.props.sensordata.graphdata;
-
+    // if json object has complete Airdata
     if (orders !== undefined && orders.length > 1) {
+      // if data needs to be displayed in 1 min interval
       if (this.state.dataType !== "1-min-avg" && orders.length < 3) {
         let graph = this.updateChartsScoreNot1MinAvg();
         let graph2 = this.updateChartsTypeNot1MinAvg("temp");
@@ -405,7 +432,9 @@ class Analytics extends Component {
             height={450}
           ></Chart>
         );
-      } else {
+      }
+      // if data needs to be displayed in 5 or 15 min interval
+      else {
         let graph = this.updateChartsScore1MinAvg();
         let graph2 = this.updateChartsType1MinAvg("temp");
         let graph3 = this.updateChartsType1MinAvg("humid");
@@ -529,8 +558,11 @@ class Analytics extends Component {
     );
   }
 }
+
+// selecting the AirData from the store that select component needs.
+// It is called every time the store state changes
 const mapStateToProps = (state) => {
-  return { sensordata: state.datas };
+  return { sensordata: state.datas }; // return json object of AirData
 };
 export default connect(mapStateToProps, {
   getSearchedData,

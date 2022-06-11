@@ -8,6 +8,7 @@ import classnames from "classnames";
 import Header from "../Layout/Header";
 import "../scss/custom.css";
 
+// login class
 class Login extends Component {
   constructor() {
     super();
@@ -38,6 +39,7 @@ class Login extends Component {
     }
   }
 
+  // submit login request
   onSubmit(e) {
     e.preventDefault();
     const LoginRequest = {
@@ -48,6 +50,7 @@ class Login extends Component {
     this.props.login(LoginRequest);
   }
 
+  // set user input to corresponding state
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
@@ -70,11 +73,13 @@ class Login extends Component {
           <div className="row w-100 mx-0">
             <div className="col-lg-5 mx-auto">
               <div className="auth-form-light text-left py-5 px-4 px-sm-5">
+                {/* Login page title */}
                 <h1 classname="display-3">Login</h1>
                 <h4>Hello! let's get started</h4>
                 <h6 className="font-weight-light">Sign in to continue.</h6>
                 <Form className="pt-3" onSubmit={this.onSubmit}>
                   <Form.Group className="d-flex search-field">
+                    {/* username placeholder */}
                     <Form.Control
                       type="email"
                       placeholder="Username"
@@ -91,6 +96,7 @@ class Login extends Component {
                     )}
                   </Form.Group>
                   <Form.Group className="d-flex search-field my-2">
+                    {/* password placeholder */}
                     <Form.Control
                       type="password"
                       className={classnames("form-control form-control-lg", {
@@ -108,6 +114,7 @@ class Login extends Component {
                   </Form.Group>
                   {this.renderErrorMessage()}
                   <div className="mt-4">
+                    {/* submit button */}
                     <input
                       type="submit"
                       className="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn"

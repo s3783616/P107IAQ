@@ -1,6 +1,8 @@
 import axios from "axios";
 import { GET_SEARCHED_DATA, GET_AVG_DATA, GET_1MIN_AVG_DATA } from "./types";
 
+// Make a request to get get AirData for the specified Device in raw format.
+//Maximum time range of AirData points returned: 1 hour(~360 data points of 10 second intervals).
 export const getSearchedData =
   (deviceID = "") =>
   async (dispatch) => {
@@ -28,6 +30,7 @@ export const getSearchedData =
     } catch (error) {}
   };
 
+// Make a request to get the Device's AirData of 5-min-avg or 15-min-avg blocks.
 export const getAvgData =
   (deviceID = "", dateFrom = "", dateTo = "", dataType = "") =>
   async (dispatch) => {
@@ -48,6 +51,7 @@ export const getAvgData =
     } catch (error) {}
   };
 
+// Make a request to get the Device's AirData of 1-min-abg block. (Client request)
 export const get1MinAvgData =
   (deviceID = "", dateFrom = "", dateTo = "") =>
   async (dispatch) => {

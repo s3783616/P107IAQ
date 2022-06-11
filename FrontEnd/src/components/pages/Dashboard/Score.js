@@ -3,7 +3,9 @@ import { connect } from "react-redux";
 import { getSearchedData } from "../../../actions/dataActions";
 import "../../scss/Dashboard.css";
 
+// AirData Score Board class
 class Score extends Component {
+  // render building number and floor number on top left of score board
   renderLocation(building, floor) {
     return (
       <div>
@@ -13,6 +15,7 @@ class Score extends Component {
     );
   }
 
+  // render current datetime on top right of score board
   renderDate() {
     return (
       <div>
@@ -26,9 +29,12 @@ class Score extends Component {
     );
   }
 
+  // render location and date according to device id
   renderLocationAndDate() {
     const orders = this.props.sensordata.data;
+    // if user have not chosen any decive
     if (orders !== undefined) {
+      // if json array object is returned
       if (orders.length > 1) {
         if (orders[1].device_id === "26203") {
           return (
@@ -55,6 +61,7 @@ class Score extends Component {
     }
   }
 
+  // render IAQ score
   renderScore(score) {
     return (
       <div>
@@ -64,6 +71,7 @@ class Score extends Component {
     );
   }
 
+  // render Circle that display IAQ score
   renderCircle(bgColor, orders) {
     return (
       <div>
@@ -86,10 +94,12 @@ class Score extends Component {
     );
   }
 
+  // display IAQ score condition
   renderIAQScore() {
     const orders = this.props.sensordata.data;
-
+    // if json object is returned
     if (orders.length > 1) {
+      // if the json object has the Airdata
       if (orders[0].length > 0) {
         const length = orders[0].length;
         if (orders[0][length - 1].score < 40) {
@@ -132,6 +142,7 @@ class Score extends Component {
     }
   }
 
+  // render other IAQ type score
   renderTypeScore(type) {
     const orders = this.props.sensordata.data;
     if (orders.length > 1) {
@@ -152,6 +163,8 @@ class Score extends Component {
     }
   }
 
+  // render bullet that change colour according to score
+  // create for sensor value that is checked with two conditions
   renderTypeColor(type, range, range2, range3, range4) {
     const orders = this.props.sensordata.data;
     if (orders.length > 1) {
@@ -233,6 +246,8 @@ class Score extends Component {
     }
   }
 
+  // render bullet that change colour according to score
+  // create for sensor value that is checked with one condition
   renderType2Color(type, range, range2) {
     const orders = this.props.sensordata.data;
     if (orders.length > 1) {
@@ -373,7 +388,9 @@ class Score extends Component {
   }
 }
 
+// selecting the AirData from the store that score board needs.
+// It is called every time the store state changes
 const mapStateToProps = (state) => {
-  return { sensordata: state.datas };
+  return { sensordata: state.datas }; // return json object of AirData
 };
 export default connect(mapStateToProps, { getSearchedData })(Score);

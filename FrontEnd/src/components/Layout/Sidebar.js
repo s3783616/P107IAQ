@@ -8,6 +8,7 @@ import {
 } from "cdbreact";
 import { NavLink } from "react-router-dom";
 
+//Sidebar elements in app after user login
 const Sidebar = () => {
   return (
     <div

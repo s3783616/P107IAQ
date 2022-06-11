@@ -5,6 +5,7 @@ import "../scss/Guide.css";
 import Sidebar from "../Layout/Sidebar";
 import Header from "../Layout/Header";
 
+// data guide page class
 class Guide extends Component {
   render() {
     return (
@@ -31,6 +32,7 @@ class Guide extends Component {
                 <div className="cards-container">
                   <div className="card-bg w-100 border d-flex flex-column">
                     <Table bordered hover>
+                      {/*column header*/}
                       <thead>
                         <tr>
                           <th>Type</th>
@@ -41,6 +43,7 @@ class Guide extends Component {
                           <th>Range</th>
                         </tr>
                       </thead>
+                      {/*column body*/}
                       <tbody>
                         <tr>
                           <td rowspan="5">Temp</td>

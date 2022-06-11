@@ -4,10 +4,14 @@ import { getSearchedData } from "../../../actions/dataActions";
 import { Alert } from "react-bootstrap";
 import "../../scss/Dashboard.css";
 
+// Notification board class
 class Notification extends Component {
+  // render notification according to IAQ score
   renderIAQNote() {
     const orders = this.props.sensordata.data;
+    // if the user has chosen a device
     if (orders.length > 1) {
+      // if the json object has at least one AirData
       if (orders[0].length > 0) {
         if (orders[0].score < 40) {
           return (
@@ -51,6 +55,7 @@ class Notification extends Component {
     }
   }
 
+  // render notification according to temperature index
   renderTempNote() {
     const orders = this.props.sensordata.data;
     if (orders.length > 1) {
@@ -137,6 +142,7 @@ class Notification extends Component {
     }
   }
 
+  // render notification according to humidity index
   renderHumidNote() {
     const orders = this.props.sensordata.data;
     if (orders.length > 1) {
@@ -223,6 +229,7 @@ class Notification extends Component {
     }
   }
 
+  // render notification according to carbon dioxide index
   renderCO2Note() {
     const orders = this.props.sensordata.data;
     if (orders.length > 1) {
@@ -269,6 +276,7 @@ class Notification extends Component {
     }
   }
 
+  // render notification according to volatic organic compound index
   renderVOCNote() {
     const orders = this.props.sensordata.data;
     if (orders.length > 1) {
@@ -315,6 +323,7 @@ class Notification extends Component {
     }
   }
 
+  // render notification according to Particulate Matter 2.5 index
   renderPM25Note() {
     const orders = this.props.sensordata.data;
     if (orders.length > 1) {
@@ -374,7 +383,9 @@ class Notification extends Component {
   }
 }
 
+// selecting the AirData from the store that notification board needs.
+// It is called every time the store state changes
 const mapStateToProps = (state) => {
-  return { sensordata: state.datas };
+  return { sensordata: state.datas }; // return json object of AirData
 };
 export default connect(mapStateToProps, { getSearchedData })(Notification);

@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import Header from "../Layout/Header";
 import "../scss/custom.css";
 
+// Register class
 class Register extends Component {
   constructor() {
     super();
@@ -22,6 +23,7 @@ class Register extends Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
+  // submit register request
   onSubmit(e) {
     e.preventDefault();
     const newUser = {
@@ -34,6 +36,7 @@ class Register extends Component {
     this.props.createNewUser(newUser, this.props.history);
   }
 
+  // set user input to corresponding state
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
@@ -49,6 +52,7 @@ class Register extends Component {
           <div className="row w-100 mx-0">
             <div className="col-lg-5 mx-auto">
               <div className="auth-form-light text-left py-0 px-5 px-sm-5">
+                {/* Register page title */}
                 <h1 classname="display-3">Register</h1>
                 <h4>New here?</h4>
                 <h6 className="font-weight-light">
@@ -56,6 +60,7 @@ class Register extends Component {
                 </h6>
                 <Form className="pt-3" onSubmit={this.onSubmit}>
                   <Form.Group className="d-flex search-field my-2">
+                    {/* username placeholder */}
                     <Form.Control
                       type="email"
                       placeholder="Username"
@@ -66,6 +71,7 @@ class Register extends Component {
                       onChange={this.onChange}
                     />
                   </Form.Group>
+                  {/* full name placeholder */}
                   <Form.Group className="d-flex search-field my-2">
                     <Form.Control
                       type="text"
@@ -77,6 +83,7 @@ class Register extends Component {
                       onChange={this.onChange}
                     />
                   </Form.Group>
+                  {/* password placeholder */}
                   <Form.Group className="d-flex search-field my-2">
                     <Form.Control
                       type="password"
@@ -88,6 +95,7 @@ class Register extends Component {
                       onChange={this.onChange}
                     />
                   </Form.Group>
+                  {/* confirm password placeholder */}
                   <Form.Group className="d-flex search-field my-2">
                     <Form.Control
                       type="password"
