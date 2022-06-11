@@ -34,17 +34,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-        authenticationManagerBuilder.userDetailsService(customUserDetailsService).passwordEncoder(bCryptPasswordEncoder);
-    }
-
-    @Override
-    @Bean(BeanIds.AUTHENTICATION_MANAGER)
-    protected AuthenticationManager authenticationManager() throws Exception {
-        return super.authenticationManager();
-    }
-
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {return  new JwtAuthenticationFilter();}
 
@@ -54,8 +43,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .headers().frameOptions().sameOrigin() //To enable H2 Database
                 .and()
                 .authorizeRequests()
                 .antMatchers(
@@ -70,8 +57,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.js"
                 ).permitAll()
                 .antMatchers(SecurityConstant.SIGN_UP_URLS).permitAll()
-                //.antMatchers("/api/users/**").permitAll()
-                .antMatchers(SecurityConstant.H2_URL).permitAll()
                 .anyRequest().authenticated();
 
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

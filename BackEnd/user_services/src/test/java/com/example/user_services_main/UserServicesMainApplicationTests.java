@@ -9,5 +9,4 @@ class UserServicesMainApplicationTests {
     @Test
     void contextLoads() {
     }
-
 }
