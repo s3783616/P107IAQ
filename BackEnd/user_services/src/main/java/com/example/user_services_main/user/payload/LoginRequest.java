@@ -1,4 +1,5 @@
 package com.example.user_services_main.user.payload;
+
 import javax.validation.constraints.NotBlank;
 
 public class LoginRequest {
