@@ -26,10 +26,8 @@ public class UserValidator implements Validator {
             errors.rejectValue("confirmPassword","Match", "Passwords must match");
 
         }
-
-        //confirmPassword
-
-
-
+        if(user.getUsername().equals("")||user.getUsername().equals(null)){
+            errors.rejectValue("username","empty", "username must not be empty");
+        }
     }
 }
