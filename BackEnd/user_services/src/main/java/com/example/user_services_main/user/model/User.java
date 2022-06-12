@@ -7,6 +7,9 @@ import javax.validation.constraints.NotBlank;
 
 @Entity
 public class User {
+    // This class represents the model for a typical user
+    // Contains an id, location and name, as well as username and password fields
+    // Note that we did not implement location based details, so these getter/setter methods aren't used
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +24,9 @@ public class User {
     private String password;
     @Transient
     private String confirmPassword;
+
+    public User() {
+    }
 
     public String getConfirmPassword() {
         return confirmPassword;
@@ -42,12 +48,9 @@ public class User {
         return password;
     }
 
-    public void setPassword(String passsword) {
-        this.password = passsword;
+    public void setPassword(String password) {
+        this.password = password;
     }
-
-    public User()
-    {}
 
     public Long getId() {
         return id;
