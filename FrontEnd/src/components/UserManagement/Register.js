@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { Form } from "react-bootstrap";
 import { createNewUser } from "../../actions/securityActions";
 import { Link } from "react-router-dom";
+import { Alert } from "react-bootstrap";
 import Header from "../Layout/Header";
 import "../scss/custom.css";
 
@@ -41,23 +42,60 @@ class Register extends Component {
     this.setState({ [e.target.name]: e.target.value });
   }
 
+  // display invalid username error
+  renderUsernameErrorMessage() {
+    const error = this.props.errors.error;
+
+    if (error.username !== undefined) {
+      return (
+        <Alert key="danger" variant="danger">
+          {error.username}
+        </Alert>
+      );
+    }
+  }
+
+  // display invalid password error
+  renderPasswordErrorMessage() {
+    const error = this.props.errors.error;
+
+    if (error.password !== undefined) {
+      return (
+        <Alert key="danger" variant="danger">
+          {error.password}
+        </Alert>
+      );
+    }
+  }
+
+  // display error message when confirm password does not match password
+  renderConfirmPasswordErrorMessage() {
+    const error = this.props.errors.error;
+    console.log(error.confirmPassword);
+    if (error.confirmPassword !== undefined) {
+      return (
+        <Alert key="danger" variant="danger">
+          {error.confirmPassword}
+        </Alert>
+      );
+    }
+  }
+
   render() {
     return (
       <div>
         <Header />
-        <div
-          className="hero d-flex align-items-center auth py-5"
-          style={{ height: 650 }}
-        >
-          <div className="row w-100 mx-0">
+        <div className="hero d-flex align-items-center auth py-5">
+          <div className="row w-100 mx-0 mb-3">
             <div className="col-lg-5 mx-auto">
               <div className="auth-form-light text-left py-0 px-5 px-sm-5">
                 {/* Register page title */}
-                <h1 classname="display-3">Register</h1>
+                <h1 className="display-3">Register</h1>
                 <h4>New here?</h4>
                 <h6 className="font-weight-light">
                   Signing up is easy. It only takes a few steps
                 </h6>
+
                 <Form className="pt-3" onSubmit={this.onSubmit}>
                   <Form.Group className="d-flex search-field my-2">
                     {/* username placeholder */}
@@ -71,6 +109,9 @@ class Register extends Component {
                       onChange={this.onChange}
                     />
                   </Form.Group>
+                  {this.props.errors.error
+                    ? this.renderUsernameErrorMessage()
+                    : ""}
                   {/* full name placeholder */}
                   <Form.Group className="d-flex search-field my-2">
                     <Form.Control
@@ -83,6 +124,7 @@ class Register extends Component {
                       onChange={this.onChange}
                     />
                   </Form.Group>
+
                   {/* password placeholder */}
                   <Form.Group className="d-flex search-field my-2">
                     <Form.Control
@@ -95,6 +137,9 @@ class Register extends Component {
                       onChange={this.onChange}
                     />
                   </Form.Group>
+                  {this.props.errors.error
+                    ? this.renderPasswordErrorMessage()
+                    : ""}
                   {/* confirm password placeholder */}
                   <Form.Group className="d-flex search-field my-2">
                     <Form.Control
@@ -107,6 +152,9 @@ class Register extends Component {
                       onChange={this.onChange}
                     />
                   </Form.Group>
+                  {this.props.errors.error
+                    ? this.renderConfirmPasswordErrorMessage()
+                    : ""}
                   <div className="mb-4">
                     <div className="form-check">
                       <label className="form-check-label text-muted">
