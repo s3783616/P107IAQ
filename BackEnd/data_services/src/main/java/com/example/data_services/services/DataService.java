@@ -22,7 +22,7 @@ public class DataService {
                 .addHeader("x-api-key","hZqzKsC0SRNY2sXioGnxFGk0srONpcsx")
                 .url(baseURL+"/devices")
                 .build();
-        Response response = null;
+        Response response;
 
         {
             try {
@@ -38,7 +38,7 @@ public class DataService {
 
 
     public ArrayList<Response> getData(String deviceID,String dataType,String dateFrom, String dateTo){
-        ArrayList<Response> responses = new ArrayList<Response>();
+        ArrayList<Response> responses = new ArrayList<>();
         LocalDateTime startDate = LocalDateTime.parse(dateFrom);
         LocalDateTime endDate = LocalDateTime.parse(dateTo);
 
@@ -60,12 +60,12 @@ public class DataService {
             }
             if(endDate.compareTo(tmp)<=0) tmp = endDate;
 
-            String url = baseURL+"/devices/awair-omni/"+deviceID+"/air-data/"+dataType+"?from="+startDate.toString()+":00.000Z"+"&to="+tmp.toString()+":00.000Z"+"&limit=360&desc=false&fahrenheit=false";
+            String url = baseURL+"/devices/awair-omni/"+deviceID+"/air-data/"+dataType+"?from="+ startDate +":00.000Z"+"&to="+ tmp +":00.000Z"+"&limit=360&desc=false&fahrenheit=false";
             Request req = new Request.Builder()
                     .addHeader("x-api-key","hZqzKsC0SRNY2sXioGnxFGk0srONpcsx")
                     .url(url)
                     .build();
-            Response response = null;
+            Response response;
 
             {
                 try {
