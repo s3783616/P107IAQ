@@ -1,4 +1,4 @@
-package com.example.user_services_main.user.web;
+package com.example.user_services_main.user.controllers;
 
 import com.example.user_services_main.user.model.User;
 import com.example.user_services_main.user.payload.JWTLoginSucessResponse;
@@ -10,7 +10,6 @@ import com.example.user_services_main.user.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -25,20 +24,25 @@ import static com.example.user_services_main.user.security.SecurityConstant.TOKE
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/users")
 public class UserController {
+    // A REST controller to map the user related routing
+    // It Handles getting all users, a specific user by ID and registration
+    // It also implements BCrypt to correctyl handle authentication and registration routing
     @Autowired
     private MapValidationErrorService mapValidationErrorService;
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private UserValidator userValidator;
+    @Autowired
+    private JwtTokenProvider tokenProvider;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @GetMapping("")
-    public ResponseEntity<?> getUsers(){
+    public ResponseEntity<?> getUsers() {
         Map<String, String> results = new HashMap<>();
         Iterable<User> users = userService.findAll();
-        if(users.iterator().hasNext()){
+        if (users.iterator().hasNext()) {
             return new ResponseEntity<>(users, HttpStatus.OK);
         } else {
             results.put("Message", "Could not find any users.");
@@ -47,10 +51,10 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<?> getUser(@PathVariable("userId") long userId){
+    public ResponseEntity<?> getUser(@PathVariable("userId") long userId) {
         Map<String, String> results = new HashMap<>();
         User user = userService.getUserById(userId);
-        if(user != null){
+        if (user != null) {
             return new ResponseEntity<>(user, HttpStatus.OK);
         } else {
             results.put("Message", "Could not find the user.");
@@ -60,45 +64,36 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody User user, BindingResult result){
-
-        // Validate passwords match
-        userValidator.validate(user,result);
-
+    public ResponseEntity<?> registerUser(@Valid @RequestBody User user, BindingResult result) {
+        // We use the userValidator class to ensure password is at least 6 chars and matches
+        userValidator.validate(user, result);
         ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
-        if(errorMap != null)return errorMap;
-
+        if (errorMap != null) return errorMap;
         User newUser = userService.saveUser(user);
-
-        return  new ResponseEntity<User>(newUser, HttpStatus.CREATED);
+        return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
-    @Autowired
-    private JwtTokenProvider tokenProvider;
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest, BindingResult result){
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest, BindingResult result) {
+        // Handles authentication with BCrypt
+        // We first check the errorMap using the map validation service
         ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
-        if(errorMap != null) return errorMap;
-
-        User user = userService.getUserByUsername(loginRequest.getUsername()) ;
-        if (user==null){
+        if (errorMap != null) return errorMap;
+        User user = userService.getUserByUsername(loginRequest.getUsername());
+        if (user == null) {
             Map<String, String> results = new HashMap<>();
             results.put("Message", "Could not find any users.");
             return new ResponseEntity<>(results, HttpStatus.NOT_FOUND);
-        }else{
-            if(bCryptPasswordEncoder.matches(loginRequest.getPassword(), user.getPassword())){
-                String jwt = TOKEN_PREFIX +  tokenProvider.generateToken(loginRequest.getUsername());
+        } else {
+            // If there's no errors, we return the user and the JWT response is valid
+            if (bCryptPasswordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+                String jwt = TOKEN_PREFIX + tokenProvider.generateToken(loginRequest.getUsername());
                 return ResponseEntity.ok(new JWTLoginSucessResponse(true, jwt));
-
-            }
-            else{
+            } else {
                 Map<String, String> results = new HashMap<>();
                 results.put("Message", "Could not find any users.");
                 return new ResponseEntity<>(results, HttpStatus.NOT_FOUND);
             }
         }
     }
-
 }

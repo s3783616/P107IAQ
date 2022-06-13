@@ -9,15 +9,15 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
-
+    // This service exposes methods for the controller to call upon
+    // Functionality includes finding all users, getting users by ID as well as by username
+    // It also allows saving new users into the system (primarily when registering an account as an end user)
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-
-    public Iterable<User> findAll(){
+    public Iterable<User> findAll() {
         return userRepository.findAll();
     }
 
@@ -25,31 +25,20 @@ public class UserService {
         User user = userRepository.getById(id);
         return user;
     }
+
     public User getUserByUsername(String username) {
         User user = userRepository.findByUsername(username);
         return user;
     }
 
-    public User saveUser (User newUser){
-
-      /*  newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
-        //Username has to be unique (exception)
-        // Make sure that password and confirmPassword match
-        // We don't persist or show the confirmPassword
-        return userRepository.save(newUser);
-       */
-        try{
+    public User saveUser(User newUser) {
+        try {
             newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
-            //Username has to be unique (exception)
             newUser.setUsername(newUser.getUsername());
-            // Make sure that password and confirmPassword match
-            // We don't persist or show the confirmPassword
             newUser.setConfirmPassword("");
             return userRepository.save(newUser);
-
-        }catch (Exception e){
-            throw new UsernameAlreadyExistsException("Username '"+newUser.getUsername()+"' already exists");
+        } catch (Exception e) {
+            throw new UsernameAlreadyExistsException("Username '" + newUser.getUsername() + "' already exists");
         }
-
     }
 }

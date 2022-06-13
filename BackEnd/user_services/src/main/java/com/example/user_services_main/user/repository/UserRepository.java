@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional
-public interface UserRepository extends CrudRepository<User,Long> {
+public interface UserRepository extends CrudRepository<User, Long> {
     @Override
     Iterable<User> findAll();
 
@@ -17,6 +17,4 @@ public interface UserRepository extends CrudRepository<User,Long> {
 
     @Query("select u from User u where u.id = ?1")
     User getById(Long id);
-
-
 }

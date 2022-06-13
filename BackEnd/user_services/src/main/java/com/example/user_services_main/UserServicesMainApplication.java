@@ -10,15 +10,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @SpringBootApplication
 public class UserServicesMainApplication {
 
-
     public static void main(String[] args) {
         SpringApplication.run(UserServicesMainApplication.class, args);
     }
+
     @Bean
-    BCryptPasswordEncoder bCryptPasswordEncoder(){
+    BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
