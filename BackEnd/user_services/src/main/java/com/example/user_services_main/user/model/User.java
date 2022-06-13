@@ -36,8 +36,8 @@ public class User {
         this.confirmPassword = confirmPassword;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUsername(){
+        return this.username;
     }
 
     public void setUsername(String username) {

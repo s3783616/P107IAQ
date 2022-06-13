@@ -3,16 +3,19 @@ import { connect } from "react-redux";
 import { getSearchedData } from "../../../actions/dataActions";
 import { Form, Button } from "react-bootstrap";
 
+// Select Input Control class
 class Select extends Component {
   state = {
     deviceid: " ",
   };
 
+  // set device id when user click on select options
   handleChange = (e) => {
     e.preventDefault();
     this.setState({ deviceid: e.target.value });
   };
 
+  // make a request to get Airdata in raw format when user click on search button
   onSearchSubmit = (e) => {
     e.preventDefault();
     this.props.onSearchSubmit(this.state.deviceid);
@@ -48,7 +51,9 @@ class Select extends Component {
   }
 }
 
+// selecting the AirData from the store that select component needs.
+// It is called every time the store state changes
 const mapStateToProps = (state) => {
-  return { datas: state.datas };
+  return { datas: state.datas }; // return json object of AirData
 };
 export default connect(mapStateToProps, { getSearchedData })(Select);

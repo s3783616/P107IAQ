@@ -3,6 +3,7 @@ import { GET_ERRORS, SET_CURRENT_USER } from "./types";
 import setJWTToken from "../securityUtils/setJWTToken";
 import jwt_decode from "jwt-decode";
 
+// Make a request to register a new user
 export const createNewUser = (newUser, history) => async (dispatch) => {
   try {
     await axios.post("api/users/register", newUser);
@@ -14,11 +15,12 @@ export const createNewUser = (newUser, history) => async (dispatch) => {
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
-      payload: err.response,
+      payload: err.response.data,
     });
   }
 };
 
+// Make a request to authorise login user information
 export const login = (LoginRequest) => async (dispatch) => {
   try {
     // post => Login Request
@@ -50,6 +52,7 @@ export const login = (LoginRequest) => async (dispatch) => {
   }
 };
 
+// Make a request to logout from account
 export const logout = () => (dispatch) => {
   localStorage.removeItem("jwtToken");
   //setJWTToken(false);
