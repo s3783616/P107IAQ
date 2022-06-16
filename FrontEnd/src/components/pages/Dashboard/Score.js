@@ -8,9 +8,10 @@ class Score extends Component {
   // render building number and floor number on top left of score board
   renderLocation(building, floor) {
     return (
-      <div>
-        <h7 className="d-flex  justify-content-start fw-light">{building}</h7>
-        <h7 className="d-flex justify-content-start fw-light">{floor}</h7>
+      <div style={{ fontSize: 17 }} className="flex-row fw-light">
+        <div>{building}</div>
+
+        <div>{floor}</div>
       </div>
     );
   }
@@ -18,43 +19,45 @@ class Score extends Component {
   // render current datetime on top right of score board
   renderDate() {
     return (
-      <div>
-        <h7 className="d-flex  justify-content-end fw-light">
-          {new Date().toDateString()}
-        </h7>
-        <h7 className="d-flex justify-content-end fw-light">
-          {new Date().toLocaleTimeString()}
-        </h7>
+      <div
+        style={{ fontSize: 17 }}
+        className="d-flex flex-column align-items-end"
+      >
+        <div className=" fw-light">{new Date().toDateString()}</div>
+        <div className=" fw-light">{new Date().toLocaleTimeString()}</div>
       </div>
     );
   }
 
   // render location and date according to device id
   renderLocationAndDate() {
-    const orders = this.props.sensordata.data;
+    const orders = this.props.sensordata;
     // if user have not chosen any decive
     if (orders !== undefined) {
+      const data = orders.data;
       // if json array object is returned
-      if (orders.length > 1) {
-        if (orders[1].device_id === "26203") {
-          return (
-            <div className="awair2 mb-4">
-              {this.renderLocation("Building 10", "Floor 10")}
-              {this.renderDate()}
-            </div>
-          );
-        } else if (orders[1].device_id === "25758") {
-          return (
-            <div className="awair2 mb-4">
-              {this.renderLocation("Building 10", "Floor 9")}
-              {this.renderDate()}
-            </div>
-          );
+      if (data !== undefined) {
+        if (data.length > 1) {
+          if (data[1].device_id === "26203") {
+            return (
+              <div className="awair2 mb-4">
+                {this.renderLocation("Building 10", "Floor 10")}
+                {this.renderDate()}
+              </div>
+            );
+          } else if (data[1].device_id === "25758") {
+            return (
+              <div className="awair2 mb-4">
+                {this.renderLocation("Building 10", "Floor 9")}
+                {this.renderDate()}
+              </div>
+            );
+          } else {
+            return null;
+          }
         } else {
           return null;
         }
-      } else {
-        return null;
       }
     } else {
       return null;
@@ -96,236 +99,264 @@ class Score extends Component {
 
   // display IAQ score condition
   renderIAQScore() {
-    const orders = this.props.sensordata.data;
-    // if json object is returned
-    if (orders.length > 1) {
-      // if the json object has the Airdata
-      if (orders[0].length > 0) {
-        const length = orders[0].length;
-        if (orders[0][length - 1].score < 40) {
-          return (
-            <div className="awair">
-              {this.renderCircle("#dd1111", orders[0][length - 1].score)}
-              {this.renderScore("Bad")}
-            </div>
-          );
-        } else if (orders[0][length - 1].score < 70) {
-          return (
-            <div className="awair">
-              {this.renderCircle("#ffc124", orders[0][length - 1].score)}
-              {this.renderScore("Fair")}
-            </div>
-          );
+    const orders = this.props.sensordata;
+    // if props is not empty
+    if (orders != undefined) {
+      const data = orders.data;
+      // if props object is not empty
+      if (data !== undefined) {
+        // if json object is returned
+        if (data.length > 1) {
+          // if the json object has the Airdata
+          if (data[0].length > 0) {
+            const length = data[0].length;
+            if (data[0][length - 1].score < 40) {
+              return (
+                <div className="awair">
+                  {this.renderCircle("#dd1111", data[0][length - 1].score)}
+                  {this.renderScore("Bad")}
+                </div>
+              );
+            } else if (data[0][length - 1].score < 70) {
+              return (
+                <div className="awair">
+                  {this.renderCircle("#ffc124", data[0][length - 1].score)}
+                  {this.renderScore("Fair")}
+                </div>
+              );
+            } else {
+              return (
+                <div className="awair">
+                  {this.renderCircle("#1cdd11", data[0][length - 1].score)}
+                  {this.renderScore("Good")}
+                </div>
+              );
+            }
+          } else {
+            return (
+              <div className="awair">
+                {this.renderCircle("#adadad", "?")}
+                {this.renderScore("-")}
+              </div>
+            );
+          }
         } else {
           return (
             <div className="awair">
-              {this.renderCircle("#1cdd11", orders[0][length - 1].score)}
-              {this.renderScore("Good")}
+              {this.renderCircle("#adadad", "?")}
+              {this.renderScore("-")}
             </div>
           );
         }
-      } else {
-        return (
-          <div className="awair">
-            {this.renderCircle("#adadad", "?")}
-            {this.renderScore("-")}
-          </div>
-        );
       }
-    } else {
-      return (
-        <div className="awair">
-          {this.renderCircle("#adadad", "?")}
-          {this.renderScore("-")}
-        </div>
-      );
     }
   }
 
   // render other IAQ type score
   renderTypeScore(type) {
-    const orders = this.props.sensordata.data;
-    if (orders.length > 1) {
-      if (orders[0].length > 0) {
-        const length = orders[0].length;
-        return orders[0][length - 1].sensors.map((sensor) => {
-          if (sensor.comp === type) {
-            return <span>{Math.round(sensor.value * 10) / 10}</span>;
+    const orders = this.props.sensordata;
+    if (orders !== undefined) {
+      const data = orders.data;
+      if (data !== undefined) {
+        if (data.length > 1) {
+          if (data[0].length > 0) {
+            const length = data[0].length;
+            return data[0][length - 1].sensors.map((sensor) => {
+              if (sensor.comp === type) {
+                return (
+                  <span key="{sensor.value}">
+                    {Math.round(sensor.value * 10) / 10}
+                  </span>
+                );
+              } else {
+                return null;
+              }
+            });
           } else {
-            return null;
+            return <span>-</span>;
           }
-        });
-      } else {
-        return <span>-</span>;
+        } else {
+          return <span>-</span>;
+        }
       }
-    } else {
-      return <span>-</span>;
     }
   }
 
   // render bullet that change colour according to score
   // create for sensor value that is checked with two conditions
   renderTypeColor(type, range, range2, range3, range4) {
-    const orders = this.props.sensordata.data;
-    if (orders.length > 1) {
-      if (orders[0].length > 0) {
-        const length = orders[0].length;
-        return orders[0][length - 1].sensors.map((sensor) => {
-          if (sensor.comp === type) {
-            if (sensor.value < range || sensor.value > range2) {
-              return (
-                <span
-                  className="d-flex"
-                  style={{
-                    fontSize: "3em",
-                    margin: "-1.5rem 0px -2rem 0px",
-                    color: "#dd1111",
-                  }}
-                >
-                  &#8226;
-                </span>
-              );
-            } else if (sensor.value < range3 || sensor.value > range4) {
-              return (
-                <span
-                  className="d-flex"
-                  style={{
-                    fontSize: "3em",
-                    margin: "-1.5rem 0px -2rem 0px",
-                    color: "#ffc124",
-                  }}
-                >
-                  &#8226;
-                </span>
-              );
-            } else {
-              return (
-                <span
-                  className="d-flex"
-                  style={{
-                    fontSize: "3em",
-                    margin: "-1.5rem 0px -2rem 0px",
-                    color: "#1cdd11",
-                  }}
-                >
-                  &#8226;
-                </span>
-              );
-            }
+    const orders = this.props.sensordata;
+    if (orders !== undefined) {
+      const data = orders.data;
+      if (data !== undefined) {
+        if (data.length > 1) {
+          if (data[0].length > 0) {
+            const length = data[0].length;
+            return data[0][length - 1].sensors.map((sensor) => {
+              if (sensor.comp === type) {
+                if (sensor.value < range || sensor.value > range2) {
+                  return (
+                    <span
+                      className="d-flex"
+                      style={{
+                        fontSize: "3em",
+                        margin: "-1.5rem 0px -2rem 0px",
+                        color: "#dd1111",
+                      }}
+                    >
+                      &#8226;
+                    </span>
+                  );
+                } else if (sensor.value < range3 || sensor.value > range4) {
+                  return (
+                    <span
+                      className="d-flex"
+                      style={{
+                        fontSize: "3em",
+                        margin: "-1.5rem 0px -2rem 0px",
+                        color: "#ffc124",
+                      }}
+                    >
+                      &#8226;
+                    </span>
+                  );
+                } else {
+                  return (
+                    <span
+                      key="{sensor.value}"
+                      className="d-flex"
+                      style={{
+                        fontSize: "3em",
+                        margin: "-1.5rem 0px -2rem 0px",
+                        color: "#1cdd11",
+                      }}
+                    >
+                      &#8226;
+                    </span>
+                  );
+                }
+              } else {
+                return null;
+              }
+            });
           } else {
-            return null;
+            return (
+              <span
+                className="d-flex"
+                style={{
+                  fontSize: "3em",
+                  margin: "-1.5rem 0px -2rem 0px",
+                  color: "#adadad",
+                }}
+              >
+                &#8226;
+              </span>
+            );
           }
-        });
-      } else {
-        return (
-          <span
-            className="d-flex"
-            style={{
-              fontSize: "3em",
-              margin: "-1.5rem 0px -2rem 0px",
-              color: "#adadad",
-            }}
-          >
-            &#8226;
-          </span>
-        );
+        } else {
+          return (
+            <span
+              className="d-flex"
+              style={{
+                fontSize: "3em",
+                margin: "-1.5rem 0px -2rem 0px",
+                color: "#adadad",
+              }}
+            >
+              &#8226;
+            </span>
+          );
+        }
       }
-    } else {
-      return (
-        <span
-          className="d-flex"
-          style={{
-            fontSize: "3em",
-            margin: "-1.5rem 0px -2rem 0px",
-            color: "#adadad",
-          }}
-        >
-          &#8226;
-        </span>
-      );
     }
   }
 
   // render bullet that change colour according to score
   // create for sensor value that is checked with one condition
   renderType2Color(type, range, range2) {
-    const orders = this.props.sensordata.data;
-    if (orders.length > 1) {
-      if (orders[0].length > 0) {
-        const length = orders[0].length;
-        return orders[0][length - 1].sensors.map((sensor) => {
-          if (sensor.comp === type) {
-            if (sensor.value > range) {
-              return (
-                <span
-                  className="d-flex"
-                  style={{
-                    fontSize: "3em",
-                    margin: "-1.5rem 0px -2rem 0px",
-                    color: "#dd1111",
-                  }}
-                >
-                  &#8226;
-                </span>
-              );
-            } else if (sensor.value > range2) {
-              return (
-                <span
-                  className="d-flex"
-                  style={{
-                    fontSize: "3em",
-                    margin: "-1.5rem 0px -2rem 0px",
-                    color: "#ffc124",
-                  }}
-                >
-                  &#8226;
-                </span>
-              );
-            } else {
-              return (
-                <span
-                  className="d-flex"
-                  style={{
-                    fontSize: "3em",
-                    margin: "-1.5rem 0px -2rem 0px",
-                    color: "#1cdd11",
-                  }}
-                >
-                  &#8226;
-                </span>
-              );
-            }
+    const orders = this.props.sensordata;
+    if (orders !== undefined) {
+      const data = orders.data;
+      if (data !== undefined) {
+        if (data.length > 1) {
+          if (data[0].length > 0) {
+            const length = data[0].length;
+            return data[0][length - 1].sensors.map((sensor) => {
+              if (sensor.comp === type) {
+                if (sensor.value > range) {
+                  return (
+                    <span
+                      className="d-flex"
+                      style={{
+                        fontSize: "3em",
+                        margin: "-1.5rem 0px -2rem 0px",
+                        color: "#dd1111",
+                      }}
+                    >
+                      &#8226;
+                    </span>
+                  );
+                } else if (sensor.value > range2) {
+                  return (
+                    <span
+                      className="d-flex"
+                      style={{
+                        fontSize: "3em",
+                        margin: "-1.5rem 0px -2rem 0px",
+                        color: "#ffc124",
+                      }}
+                    >
+                      &#8226;
+                    </span>
+                  );
+                } else {
+                  return (
+                    <span
+                      key="{sensor.value}"
+                      className="d-flex"
+                      style={{
+                        fontSize: "3em",
+                        margin: "-1.5rem 0px -2rem 0px",
+                        color: "#1cdd11",
+                      }}
+                    >
+                      &#8226;
+                    </span>
+                  );
+                }
+              } else {
+                return null;
+              }
+            });
           } else {
-            return null;
+            return (
+              <span
+                className="d-flex"
+                style={{
+                  fontSize: "3em",
+                  margin: "-1.5rem 0px -2rem 0px",
+                  color: "#adadad",
+                }}
+              >
+                &#8226;
+              </span>
+            );
           }
-        });
-      } else {
-        return (
-          <span
-            className="d-flex"
-            style={{
-              fontSize: "3em",
-              margin: "-1.5rem 0px -2rem 0px",
-              color: "#adadad",
-            }}
-          >
-            &#8226;
-          </span>
-        );
+        } else {
+          return (
+            <span
+              className="d-flex"
+              style={{
+                fontSize: "3em",
+                margin: "-1.5rem 0px -2rem 0px",
+                color: "#adadad",
+              }}
+            >
+              &#8226;
+            </span>
+          );
+        }
       }
-    } else {
-      return (
-        <span
-          className="d-flex"
-          style={{
-            fontSize: "3em",
-            margin: "-1.5rem 0px -2rem 0px",
-            color: "#adadad",
-          }}
-        >
-          &#8226;
-        </span>
-      );
     }
   }
 
@@ -333,54 +364,48 @@ class Score extends Component {
     return (
       <div>
         {this.renderLocationAndDate()}
-        {this.props.sensordata.data ? this.renderIAQScore() : ""}
+        {this.props.sensordata ? this.renderIAQScore() : ""}
         <div className="iaq">
-          {this.props.sensordata.data
+          {this.props.sensordata
             ? this.renderTypeColor("temp", 11, 32, 18, 26)
             : ""}
           <span className="iaq-element">Temperature (&#8451;)</span>
           <span className="d-flex iaq-element justify-content-end">
-            {this.props.sensordata.data ? this.renderTypeScore("temp") : ""}
+            {this.props.sensordata ? this.renderTypeScore("temp") : ""}
           </span>
         </div>
         <div className="iaq">
-          {this.props.sensordata.data
+          {this.props.sensordata
             ? this.renderTypeColor("humid", 20, 65, 40, 50)
             : ""}
           <span className="iaq-element">Humidity (&#37;)</span>
           <span className="d-flex iaq-element justify-content-end">
-            {this.props.sensordata.data ? this.renderTypeScore("humid") : ""}
+            {this.props.sensordata ? this.renderTypeScore("humid") : ""}
           </span>
         </div>
         <div className="iaq">
-          {this.props.sensordata.data
-            ? this.renderType2Color("co2", 1500, 600)
-            : ""}
+          {this.props.sensordata ? this.renderType2Color("co2", 1500, 600) : ""}
           <span className="iaq-element">
             CO<sub>2</sub> (ppm)
           </span>
           <span className="d-flex iaq-element justify-content-end">
-            {this.props.sensordata.data ? this.renderTypeScore("co2") : ""}
+            {this.props.sensordata ? this.renderTypeScore("co2") : ""}
           </span>
         </div>
         <div className="iaq">
-          {this.props.sensordata.data
-            ? this.renderType2Color("voc", 3333, 333)
-            : ""}
+          {this.props.sensordata ? this.renderType2Color("voc", 3333, 333) : ""}
           <span className="iaq-element">
             VOC<sub>s</sub> (ppb)
           </span>
           <span className="d-flex iaq-element justify-content-end">
-            {this.props.sensordata.data ? this.renderTypeScore("voc") : ""}
+            {this.props.sensordata ? this.renderTypeScore("voc") : ""}
           </span>
         </div>
         <div className="iaq">
-          {this.props.sensordata.data
-            ? this.renderType2Color("pm25", 55, 15)
-            : ""}
+          {this.props.sensordata ? this.renderType2Color("pm25", 55, 15) : ""}
           <span className="iaq-element">PM2.5 (&#181;g/m&sup2;)</span>
           <span className="d-flex iaq-element justify-content-end">
-            {this.props.sensordata.data ? this.renderTypeScore("pm25") : ""}
+            {this.props.sensordata ? this.renderTypeScore("pm25") : ""}
           </span>
         </div>
       </div>

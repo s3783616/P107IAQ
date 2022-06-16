@@ -58,14 +58,18 @@ class Login extends Component {
 
   //  display invalid username and password error
   renderErrorMessage() {
-    const error = this.props.errors.error;
-
-    if (error.Message !== "undefined") {
-      return (
-        <Alert className="mt-4" key="danger" variant="danger">
-          Username and Password do not match!
-        </Alert>
-      );
+    const errors = this.props.errors;
+    if (errors !== undefined) {
+      const error = errors.error;
+      if (error !== undefined) {
+        if (error.Message !== "undefined") {
+          return (
+            <Alert className="mt-4" key="danger" variant="danger">
+              Username and Password do not match!
+            </Alert>
+          );
+        }
+      }
     }
   }
 
@@ -84,7 +88,7 @@ class Login extends Component {
                 <h1 className="display-3">Login</h1>
                 <h4>Hello! let's get started</h4>
                 <h6 className="font-weight-light">Sign in to continue.</h6>
-                {this.props.errors.error ? this.renderErrorMessage() : ""}
+                {this.props.errors ? this.renderErrorMessage() : ""}
                 <Form className="pt-3" onSubmit={this.onSubmit}>
                   <Form.Group className="d-flex search-field">
                     {/* username placeholder */}

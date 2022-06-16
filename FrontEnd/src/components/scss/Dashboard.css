@@ -61,7 +61,7 @@
   margin: 5px 3px;
   display: grid;
   width: 100%;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 7fr 3fr;
   grid-gap: 0px;
   grid-template-rows: 0fr;
 }

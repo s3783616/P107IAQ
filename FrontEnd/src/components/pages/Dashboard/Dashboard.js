@@ -74,8 +74,8 @@ class Dashboard extends Component {
           }}
         >
           <Header />
-          <div style={{ height: "100%" }}>
-            <div style={{ height: "calc(100% - 50px)", overflowY: "scroll" }}>
+          <div style={{ height: "calc(100% - 40px)" }}>
+            <div style={{ height: "calc(100% - 10px)", overflowY: "scroll" }}>
               {/*page title*/}
               <div className="d-flex">
                 <div className="mr-auto ml-5 mt-4">

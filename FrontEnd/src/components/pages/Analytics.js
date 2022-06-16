@@ -407,64 +407,67 @@ class Analytics extends Component {
   // pass data extracted from json onject to props
   renderChart() {
     const newMixedSeries = [];
-    const orders = this.props.sensordata.graphdata;
-    // if json object has complete Airdata
-    if (orders !== undefined && orders.length > 1) {
-      // if data needs to be displayed in 1 min interval
-      if (this.state.dataType !== "1-min-avg" && orders.length < 3) {
-        let graph = this.updateChartsScoreNot1MinAvg();
-        let graph2 = this.updateChartsTypeNot1MinAvg("temp");
-        let graph3 = this.updateChartsTypeNot1MinAvg("humid");
-        let graph4 = this.updateChartsTypeNot1MinAvg("co2");
-        let graph5 = this.updateChartsTypeNot1MinAvg("voc");
-        let graph6 = this.updateChartsTypeNot1MinAvg("pm25");
-        newMixedSeries.push({ data: graph });
-        newMixedSeries.push({ data: graph2 });
-        newMixedSeries.push({ data: graph3 });
-        newMixedSeries.push({ data: graph4 });
-        newMixedSeries.push({ data: graph5 });
-        newMixedSeries.push({ data: graph6 });
+    const orders = this.props.sensordata;
+    if (orders !== undefined) {
+      const data = orders.graphdata;
+      // if json object has complete Airdata
+      if (data !== undefined && data.length > 1) {
+        // if data needs to be displayed in 1 min interval
+        if (this.state.dataType !== "1-min-avg" && data.length < 3) {
+          let graph = this.updateChartsScoreNot1MinAvg();
+          let graph2 = this.updateChartsTypeNot1MinAvg("temp");
+          let graph3 = this.updateChartsTypeNot1MinAvg("humid");
+          let graph4 = this.updateChartsTypeNot1MinAvg("co2");
+          let graph5 = this.updateChartsTypeNot1MinAvg("voc");
+          let graph6 = this.updateChartsTypeNot1MinAvg("pm25");
+          newMixedSeries.push({ data: graph });
+          newMixedSeries.push({ data: graph2 });
+          newMixedSeries.push({ data: graph3 });
+          newMixedSeries.push({ data: graph4 });
+          newMixedSeries.push({ data: graph5 });
+          newMixedSeries.push({ data: graph6 });
+          return (
+            <Chart
+              options={this.state.options}
+              series={newMixedSeries}
+              type="line"
+              height={450}
+            ></Chart>
+          );
+        }
+        // if data needs to be displayed in 5 or 15 min interval
+        else {
+          let graph = this.updateChartsScore1MinAvg();
+          let graph2 = this.updateChartsType1MinAvg("temp");
+          let graph3 = this.updateChartsType1MinAvg("humid");
+          let graph4 = this.updateChartsType1MinAvg("co2");
+          let graph5 = this.updateChartsType1MinAvg("voc");
+          let graph6 = this.updateChartsType1MinAvg("pm25");
+          newMixedSeries.push({ data: graph });
+          newMixedSeries.push({ data: graph2 });
+          newMixedSeries.push({ data: graph3 });
+          newMixedSeries.push({ data: graph4 });
+          newMixedSeries.push({ data: graph5 });
+          newMixedSeries.push({ data: graph6 });
+          return (
+            <Chart
+              options={this.state.options}
+              series={newMixedSeries}
+              type="line"
+              height={450}
+            ></Chart>
+          );
+        }
+      } else {
         return (
           <Chart
             options={this.state.options}
-            series={newMixedSeries}
+            series={this.state.series}
             type="line"
             height={450}
           ></Chart>
         );
       }
-      // if data needs to be displayed in 5 or 15 min interval
-      else {
-        let graph = this.updateChartsScore1MinAvg();
-        let graph2 = this.updateChartsType1MinAvg("temp");
-        let graph3 = this.updateChartsType1MinAvg("humid");
-        let graph4 = this.updateChartsType1MinAvg("co2");
-        let graph5 = this.updateChartsType1MinAvg("voc");
-        let graph6 = this.updateChartsType1MinAvg("pm25");
-        newMixedSeries.push({ data: graph });
-        newMixedSeries.push({ data: graph2 });
-        newMixedSeries.push({ data: graph3 });
-        newMixedSeries.push({ data: graph4 });
-        newMixedSeries.push({ data: graph5 });
-        newMixedSeries.push({ data: graph6 });
-        return (
-          <Chart
-            options={this.state.options}
-            series={newMixedSeries}
-            type="line"
-            height={450}
-          ></Chart>
-        );
-      }
-    } else {
-      return (
-        <Chart
-          options={this.state.options}
-          series={this.state.series}
-          type="line"
-          height={450}
-        ></Chart>
-      );
     }
   }
 

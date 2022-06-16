@@ -4,7 +4,7 @@ import {
   GET_1MIN_AVG_DATA,
 } from "../actions/types";
 
-export default function (state = [], action) {
+export default function dataReducers(state = [], action) {
   switch (action.type) {
     // if action type field is to get Airdata in raw format
     case GET_SEARCHED_DATA:

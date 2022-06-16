@@ -46,10 +46,10 @@ class Guide extends Component {
                       {/*column body*/}
                       <tbody>
                         <tr>
-                          <td rowspan="5">Temp</td>
-                          <td rowspan="5">Temperature</td>
-                          <td rowspan="5">&#8451;</td>
-                          <td rowspan="5">degree Celcius</td>
+                          <td rowSpan="5">Temp</td>
+                          <td rowSpan="5">Temperature</td>
+                          <td rowSpan="5">&#8451;</td>
+                          <td rowSpan="5">degree Celcius</td>
                           <td>>32</td>
                           <td className="row-bad text-white">
                             <span>Bad</span>
@@ -72,10 +72,10 @@ class Guide extends Component {
                           <td className="row-bad text-white">Bad</td>
                         </tr>
                         <tr>
-                          <td rowspan="5">Humid</td>
-                          <td rowspan="5">Relative Humidity</td>
-                          <td rowspan="5">&#37;</td>
-                          <td rowspan="5">relative humidity (RH%)</td>
+                          <td rowSpan="5">Humid</td>
+                          <td rowSpan="5">Relative Humidity</td>
+                          <td rowSpan="5">&#37;</td>
+                          <td rowSpan="5">relative humidity (RH%)</td>
                           <td>>65</td>
                           <td className="row-bad text-white">
                             <span>Bad</span>
@@ -98,12 +98,12 @@ class Guide extends Component {
                           <td className="row-bad text-white">Bad</td>
                         </tr>
                         <tr>
-                          <td rowspan="3">
+                          <td rowSpan="3">
                             CO<sub>2</sub>
                           </td>
-                          <td rowspan="3">Carbon Dioxide</td>
-                          <td rowspan="3">ppm</td>
-                          <td rowspan="3">parts per million</td>
+                          <td rowSpan="3">Carbon Dioxide</td>
+                          <td rowSpan="3">ppm</td>
+                          <td rowSpan="3">parts per million</td>
                           <td>400-600</td>
                           <td className="row-good text-white">
                             <span>Good</span>
@@ -118,14 +118,14 @@ class Guide extends Component {
                           <td className="row-bad text-white">Bad</td>
                         </tr>
                         <tr>
-                          <td rowspan="3">
+                          <td rowSpan="3">
                             VOC<sub>s</sub>
                           </td>
-                          <td rowspan="3">
+                          <td rowSpan="3">
                             Total Volatile Organic Compounds (TVOCs)
                           </td>
-                          <td rowspan="3">ppb</td>
-                          <td rowspan="3">parts per billion</td>
+                          <td rowSpan="3">ppb</td>
+                          <td rowSpan="3">parts per billion</td>
                           <td>>0-333</td>
                           <td className="row-good text-white">
                             <span>Good</span>
@@ -140,12 +140,12 @@ class Guide extends Component {
                           <td className="row-bad text-white">Bad</td>
                         </tr>
                         <tr>
-                          <td rowspan="3">PM2.5</td>
-                          <td rowspan="3">
+                          <td rowSpan="3">PM2.5</td>
+                          <td rowSpan="3">
                             Particulate Matter (PM2.5 - Fine Dust)
                           </td>
-                          <td rowspan="3">μg/m³ </td>
-                          <td rowspan="3">micrograms per meter cubed</td>
+                          <td rowSpan="3">μg/m³ </td>
+                          <td rowSpan="3">micrograms per meter cubed</td>
                           <td>0-15</td>
                           <td className="row-good text-white">
                             <span>Good</span>
