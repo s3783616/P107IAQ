@@ -1,0 +1,42 @@
+**Release notes:** This is AirCo, developed by RMIT team DS-107-IAQ, creating an app to help users connect to Awair sensors, and recieve more granular data as well as some health advice, in the wake of recent bushfires in rural areas, and the growing issue of air pollution affecting metropolitan areas.
+Our finished product takes information from Awair sensors, pulls them into AirCo's backend using various APIs, storing them on a locally setup SQL Database, and displaying them on a website, represented using open source libaries to create graphs based on the data.
+
+**Authors:**
+Duc Tran
+Anson Guang Ping Go
+Jason Song
+Manav Shrivastav
+Thomas Jukes
+
+**Installation: **
+
+To operate this product, follow installation instructions in the order set out by this document. I.e, Backend>Database>Frontend
+
+Backend: Copy the Github repo through either downloading the ZIP file, or copying the repositiory using the in-built function of the Github Desktop app. Once you have done that, follow instructions held within the 'HOW TO RUN THE BACK/FRONT-END' documents. Namely, in WSL or Ubuntu, run: “sudo apt-get update”, “sudo apt-get upgrade”, “sudo apt install openjdk-11-jre-headless”, “sudo apt install maven” for a first time run.
+
+For creating the Database, follow these instructions, largely held in the MYSQL DATABASE ON UBUNTU document: 
+Step 1: Follow this tutorial to instal mysql on an Ubuntu server. https://phoenixnap.com/kb/install-mysql-ubuntu-20-04
+Step 2: Create database by enter “CREATE DATABASE <database name>;”. Enter “SHOW DATABASES;” to see the database you’ve created.
+Step 3: Changing the application.properties file in User_services to reflect your localhost. A detailed image can be found in the 'MYSQL DATABASE ON UBUNTU' document.
+
+For running the Front-End, follow these instructions: 
+Step 1: Install node.js from the following link https://nodejs.org/en/download/
+Step 2: Run Visual Studio Code in your local machine. You can install the latest version here
+https://code.visualstudio.com/
+(Note: Any IDE one is comfortable with is acceptable.)
+
+**Running instructions**
+
+Back-End: 
+Follow instructions held within the 'HOW TO RUN THE BACK/FRONT-END' documents. Once you have cloned the repository, type “cd P107IAQ/BackEnd/data_services/” to go into the microservice directory and type “mvn spring-boot:run”. And that is it. Now there are two microservices in the BackEnd, data_services and user_services. The one run in the example is data_services. If you want to run the user_service, simply “cd” then “cd P107IAQ/BackEnd/user_services” then “mvn spring-boot:run” and the user_services will be up.
+
+If you wish to run both microservices, you will need to open two Ubuntu terminals (simply by looking for the Ubuntu icon in the window search bar)
+
+Front End: While in your IDE of choice (or the recommended Visual Studio Code) Go to File -> Open Folder… -> (Root directory that you download the project to) -> P107IAQ. Click on “FrontEnd” folder and click on the “Select Folder” button.
+
+Run “node -v” in terminal to check if node.js has been correctly installed. Run “npm i” and “npm start” after that.
+Congratulations! You will be able to see our login page in your localhost destination.
+
+**Any change logs:**
+GitHub URL: https://github.com/s3783616/P107IAQ
+URL of the deployed project: N/A
